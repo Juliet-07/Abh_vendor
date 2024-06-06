@@ -20,15 +20,15 @@ const Layout = ({ children }) => {
     {
       title: "Dashboard",
       icon: <img src={DashboardIcon} />,
-      path: "/dashboard",
+      path: "/dashboard/home",
     },
     {
       title: "Orders",
       icon: <img src={OrdersIcon} />,
       submenu: true,
       submenuItems: [
-        { title: "All Orders", path: "/newVendors" },
-        { title: "Track Orders", path: "/businessProcesses/all-vendors" },
+        { title: "All Orders", path: "/dashboard/allOrders" },
+        { title: "Track Orders", path: "/dashboard/trackOrders" },
       ],
     },
     {
@@ -44,7 +44,7 @@ const Layout = ({ children }) => {
     {
       title: "Analytics",
       icon: <img src={AnalyticsIcon} />,
-      path: "/policies",
+      path: "/dashboard/analytics",
     },
   ];
 

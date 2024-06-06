@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { miniSidebarInitialValue, RESPONSIVE_WIDTH } from "../utils/constants";
 import { useWindowSize } from "../utils/use-window-size";
@@ -37,7 +37,8 @@ const Navbar = ({ onToggleSidebar }) => {
 
   return (
     <nav className="hidden md:flex items-center justify-around h-[72px] px-6 p-2 shadow-md bg-[#359E52]">
-      <div>Dashboard</div>
+      {/* <div>Dashboard</div> */}
+      <div></div>
       <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] flex items-center rounded-[6px] ">
         <input
           type="text"
@@ -47,9 +48,12 @@ const Navbar = ({ onToggleSidebar }) => {
         <FiSearch width={16} height={16} color="#37343566" />
       </div>
       <div className="flex items-center px-4">
-        <button className="text-gray-700 mx-2 focus:outline-none">
+        <Link
+          to="/dashboard/notifications"
+          className="text-gray-700 mx-2 focus:outline-none"
+        >
           <FaBell size={24} />
-        </button>
+        </Link>
         <Menu as="div" className="relative ml-3">
           <div>
             <MenuButton className="flex rounded-full text-sm focus:outline-none">
@@ -70,43 +74,28 @@ const Navbar = ({ onToggleSidebar }) => {
           >
             <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none font-primaryRegular">
               <MenuItem>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
-                  >
-                    Your Profile
-                  </a>
-                )}
+                <Link
+                  to="/dashboard/profile"
+                  className="block px-4 py-2 text-sm text-gray-700"
+                >
+                  Your Profile
+                </Link>
               </MenuItem>
               <MenuItem>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
-                  >
-                    Settings
-                  </a>
-                )}
+                <Link
+                  to="/dashboard/settings"
+                  className="block px-4 py-2 text-sm text-gray-700"
+                >
+                  Settings
+                </Link>
               </MenuItem>
               <MenuItem>
-                {({ active }) => (
-                  <button
-                    onClick={logout}
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
-                  >
-                    Logout
-                  </button>
-                )}
+                <Link
+                  onClick={logout}
+                  className="block px-4 py-2 text-sm text-gray-700"
+                >
+                  Logout
+                </Link>
               </MenuItem>
             </MenuItems>
           </Transition>
