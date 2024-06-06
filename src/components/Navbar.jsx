@@ -13,6 +13,7 @@ import {
   Transition,
 } from "@headlessui/react";
 import { IoPersonSharp } from "react-icons/io5";
+import { FiBell, FiSearch, FiUser } from "react-icons/fi";
 
 const Navbar = ({ onToggleSidebar }) => {
   const navigate = useNavigate();
@@ -35,9 +36,16 @@ const Navbar = ({ onToggleSidebar }) => {
   };
 
   return (
-    <nav className="hidden md:flex items-center justify-evenly h-[72px] px-6 p-2 shadow-md bg-[#359E52]">
+    <nav className="hidden md:flex items-center justify-around h-[72px] px-6 p-2 shadow-md bg-[#359E52]">
       <div>Dashboard</div>
-      <div className="w-[534px] bg-white">search bar</div>
+      <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] flex items-center rounded-[6px] ">
+        <input
+          type="text"
+          className="w-full  bg-none border-none outline-none  placeholder:text-[12px] placeholder:text-[#37343566]"
+          placeholder="Search for products"
+        />
+        <FiSearch width={16} height={16} color="#37343566" />
+      </div>
       <div className="flex items-center px-4">
         <button className="text-gray-700 mx-2 focus:outline-none">
           <FaBell size={24} />

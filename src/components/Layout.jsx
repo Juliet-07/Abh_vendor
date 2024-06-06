@@ -137,7 +137,7 @@ const Layout = ({ children }) => {
       <div className="flex-1 md:ml-[275px]">
         <Navbar />
         <MobileNavigation />
-        <main className="flex-1 overflow-y-auto p-5 pt-20 md:p-4">
+        <main className="flex-1 overflow-y-auto p-5 pt-20 md:p-3 bg-gray-100">
           {children}
         </main>
       </div>
