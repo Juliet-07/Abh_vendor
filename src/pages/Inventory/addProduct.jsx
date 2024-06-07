@@ -151,7 +151,7 @@ const AddProduct = ({ productId }) => {
               <br />
             </div>
             <br />
-            <b className="text-[16px]">Video</b>
+            {/* <b className="text-[16px]">Video</b>
             <p className="text-[16px]">Add Video link</p>
             <br />
             <div className="w-full min-h-[221px] bg-white p-[20px] flex flex-col">
@@ -175,7 +175,7 @@ const AddProduct = ({ productId }) => {
                   Add Video
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* form two */}
           <div className="w-full p-5 md:max-w-[596px] min-h-[100vh] md:rounded-xl border bg-white grid">
@@ -254,6 +254,7 @@ const AddProduct = ({ productId }) => {
               ></textarea>
             </div>
 
+            {/* discount dropdown in percentages */}
             <div>
               <label className="text-base">Discount</label>
               <select className="w-full border border-[#CFCBCB] p-3 my-2">
