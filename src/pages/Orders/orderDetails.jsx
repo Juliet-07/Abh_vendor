@@ -1,15 +1,31 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeftIcon, DownloadIcon } from "@heroicons/react/outline";
+import { IoIosPerson } from "react-icons/io";
+import { TbTruckDelivery } from "react-icons/tb";
 
 const OrderDetails = () => {
   const location = useLocation();
   const orderDetails = location.state && location.state.data;
+  console.log("detailing", orderDetails);
   const navigate = useNavigate();
 
-  //   if (!orderDetails) {
-  //     return <div>No details available</div>;
-  //   }
+  if (!orderDetails) {
+    return <div>No details available</div>;
+  }
+
+  const getOrderStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return "bg-[#E3140F]"; // Red
+      case "processing":
+        return "bg-[#0000FF]"; // Blue
+      case "ready to ship":
+        return "bg-[#008000]"; // Green
+      default:
+        return "bg-[#C1C6C5]"; // Default grey color
+    }
+  };
 
   return (
     <>
@@ -24,6 +40,7 @@ const OrderDetails = () => {
         </div>
 
         <div className="flex flex-row gap-6">
+          {/* button pops up when action has been taken on order (Accept or Cancel) */}
           {/* {acceptOrder && ( */}
           {/* <button className="h-[40px] w-[150px] rounded-[6px] bg-none text-[#373435] border-[1px] border-[#373435] hidden md:block">
             Change status
@@ -37,52 +54,61 @@ const OrderDetails = () => {
           </div>
         </div>
       </header>
-      <div className="w-full h-[90vh] md:mt-10 flex flex-col overflow-y-scroll ">
+      <div className="w-full mt-6 md:mt-10 flex flex-col">
         <div className="w-full flex flex-col ">
-          <br className="md:hidden flex" />
-          <div className="w-full">
+          <div className="w-full mb-4">
             {/* {acceptOrder && ( */}
             <button className="h-[40px] w-[150px] rounded-[6px] bg-none text-[#373435] border-[1px] border-[#373435] md:hidden block">
               Change status
             </button>
             {/* )} */}
           </div>
-          <br className="md:hidden flex" />
-          <div className="w-full bg-white flex flex-col ">
-            <div className="w-full flex flex-row min-h-[100px] border-b-[1px] border-[#CFCBCB]">
-              <div className="flex flex-col p-[20px] justify-between items-center">
-                <b className="text-xs md:text-[16px] ">Order ID #312311</b>
-                <p>Today 10:29 AM</p>
+          {/* Details */}
+          <div className="w-full bg-white flex flex-col font-primaryRegular">
+            {/* order info price section */}
+            <div className="w-full flex gap-10 border-b border-[#CFCBCB] p-4">
+              <div className="flex flex-col items-center justify-center text-xs md:text-base">
+                <p className="font-primarySemibold">
+                  Order ID #{orderDetails.id}
+                </p>
+                <p>{orderDetails.date}</p>
               </div>
-              <div className="flex flex-col p-[20px] justify-between items-center">
+              <div className="flex flex-col items-center justify-center text-xs md:text-base">
                 <p>Total price</p>
-                <b className="text-xs md:text-sm text-center">$250</b>
+                <p className="font-primarySemibold">{orderDetails.price}</p>
               </div>
-              <div className="flex flex-col p-[20px] justify-between items-center">
-                <p>Order status</p>
-                <div className="flex flex-row gap-[10px] items-center justify-center">
-                  <div className="w-[8px] h-[8px] bg-[#E3140F] rounded-[100px]" />
-                  <b className="text-sm md:text-[16px]"> pending</b>
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-sm md:text-base">Order status</p>
+                <div className="flex gap-4 items-center justify-center">
+                  <div
+                    className={`w-2 h-2 rounded-[100px] ${getOrderStatusColor(
+                      orderDetails.order_status
+                    )}`}
+                  />
+                  <p className="text-sm md:text-base font-primarySemibold">
+                    {orderDetails.order_status}
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="w-full flex flex-row min-h-[200px] border-b-[1px] border-[#CFCBCB] flex-wrap">
-              <div className="flex flex-col p-[20px] items-start">
-                <div className="flex flex-row items-center justify-center gap-[10px]">
-                  <div className="w-[40px] h-[40px] bg-[#373435] rounded-[100px]" />{" "}
+            {/*  order info delivery section*/}
+            <div className="w-full flex gap-10 border-b border-[#CFCBCB] flex-wrap">
+              {/* Customer */}
+              <div className="flex flex-col items-start p-4">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-10 h-10 bg-[#373435] rounded-[100px] text-white flex items-center justify-center">
+                    <IoIosPerson size={20} />
+                  </div>
                   <b>Customers</b>
                 </div>
-
-                <br />
-
-                <div className="flex flex-col  items-start w-full">
-                  <div className="flex flex-row gap-[10px] w-full">
-                    <p className="text-sm font-semibold">Full Name:</p>
-                    <p className="text-sm">Matthew jones</p>
+                <div className="grid gap-4">
+                  <div className="flex gap-3 text-sm">
+                    <p className="font-primarySemibold">Full Name:</p>
+                    <p>{orderDetails.name}</p>
                   </div>
-                  <div className="flex flex-row gap-[10px] w-full">
-                    <p className="text-sm font-semibold">Email:</p>
-                    <p className="text-sm">mathewjones@gmail.com</p>
+                  <div className="flex gap-3 text-sm">
+                    <p className="font-primarySemibold">Email:</p>
+                    <p>mathewjones@gmail.com</p>
                   </div>
                   <div className="flex flex-row gap-[10px] w-full">
                     <p className="text-sm font-semibold">Phone:</p>
@@ -90,60 +116,54 @@ const OrderDetails = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-col p-[20px]  items-start">
-                <div className="flex flex-row items-center justify-center gap-[10px]">
-                  <div className="w-[40px] h-[40px] bg-[#373435] rounded-[100px]" />{" "}
+              {/* Order Info */}
+              <div className="flex flex-col items-start p-4">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-10 h-10 bg-[#373435] rounded-[100px]" />{" "}
                   <b>Order Details</b>
                 </div>
-                <br />
-
-                <div className="flex flex-col  items-start w-full">
-                  <div className="flex flex-row gap-[10px] w-full items-center">
-                    <p className="text-sm font-semibold">Payment:</p>
-                    <div className="min-w-[66px] h-[35px] bg-[#08932E14] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                      <div className="w-[8px] h-[8px] bg-[#08932E] rounded-[100px]" />
+                <div className="grid gap-4">
+                  <div className="flex gap-3 items-center">
+                    <p className="text-sm font-primarySemibold">Payment:</p>
+                    <div className="min-w-[66px] h-[35px] bg-[#08932E14] p-3 flex items-center justify-center gap-3">
+                      <div className="w-2 h-2 bg-[#08932E] rounded-[100px]" />
                       <p className="text-[#08932E] text-xs">Paid</p>
                     </div>
                   </div>
-
-                  <div className="flex flex-row gap-[10px] w-full">
-                    <p className="text-sm font-semibold">Delivery:</p>
-                    <p className="text-sm w-[139px]">
-                      Deliver before tuesday 05/12/2023
-                    </p>
+                  <div className="flex gap-3 text-sm">
+                    <p className="font-primarySemibold">Delivery:</p>
+                    <p>Deliver before tuesday 05/12/2023</p>
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-col p-[20px] items-start">
-                <div className="flex flex-row items-center justify-center gap-[10px]">
-                  <div className="w-[40px] h-[40px] bg-[#373435] rounded-[100px]" />{" "}
-                  <b>Customers</b>
+              {/* Delivery Info */}
+              <div className="flex flex-col items-start p-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#373435] rounded-[100px] text-white flex items-center justify-center">
+                    <TbTruckDelivery size={20} />
+                  </div>
+                  <b>Delivery</b>
                 </div>
-
-                <br />
-
-                <div className="flex flex-col  items-start w-full">
-                  <div className="flex flex-row gap-[10px] w-full">
-                    <p className="text-sm font-semibold">City:</p>
-                    <p className="text-sm">Lagos</p>
+                <div className="grid gap-4">
+                  <div className="flex gap-3 text-sm">
+                    <p className="font-primarySemibold">City:</p>
+                    <p>Lagos</p>
                   </div>
-                  <div className="flex flex-row gap-[10px] w-full">
-                    <p className="text-sm font-semibold">State:</p>
-                    <p className="text-sm">New york</p>
+                  <div className="flex gap-3 text-sm">
+                    <p className="font-primarySemibold">State:</p>
+                    <p>New york</p>
                   </div>
-                  <div className="flex flex-row gap-[10px] w-full">
-                    <p className="text-sm font-semibold">Address:</p>
-                    <p className="text-sm">7, Kingsway, Otawa, NY</p>
+                  <div className="flex gap-3 text-sm">
+                    <p className="font-primarySemibold">Address:</p>
+                    <p>{orderDetails.address}</p>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div className="w-full flex flex-row min-h-[200px] p-[20px] items-center flex-wrap gap-[20px]">
-              <div className="w-[175px] border-[1px] border-[#CFCBCB] h-[120px] rounded-[8px]"></div>
-              <div className="flex flex-row items-center  gap-[20px]">
+            {/* Product Info */}
+            <div className="w-full flex items-center flex-wrap p-4 gap-4">
+              <div className="w-[175px] border border-[#CFCBCB] h-[120px] rounded-lg"></div>
+              <div className="flex items-center  gap-10">
                 <div className="flex flex-col items-center">
                   <b className="text-sm">Apples</b>
                   <p className="text-xs">Grocery</p>
@@ -159,9 +179,9 @@ const OrderDetails = () => {
               </div>
             </div>
           </div>
-          {/* {!acceptOrder && ( */}
-          <div className="w-full flex flex-row items-center justify-end mt-[20px]">
-            <div className="w-full md:max-w-[300px] md:gap-[20px] flex flex-row justify-between items-center">
+          {/* Action Buttons */}
+          <div className="w-full flex flex-row items-center justify-end my-4 font-primaryRegular">
+            <div className="w-full md:max-w-[300px] md:gap-5 flex flex-row justify-between items-center">
               <button
                 //   onClick={() => {
                 //     toast("Order Accepted", {
@@ -169,17 +189,15 @@ const OrderDetails = () => {
                 //     });
                 //     setacceptOrder(true);
                 //   }}
-                className="h-[46px] w-[150px] rounded-[6px] bg-[#359E52] text-white"
+                className="h-[46px] w-[150px] rounded-md bg-[#359E52] text-white"
               >
                 Accept Order
               </button>
-              <button className="h-[46px] w-[150px] rounded-[6px] bg-none text-[red] border-[1px] border-[red]">
+              <button className="h-[46px] w-[150px] rounded-md bg-none text-red-500 border border-red-500">
                 Cancel order
               </button>
             </div>
           </div>
-          {/* )} */}
-          <div className="min-h-[100px] w-full"></div>
         </div>
       </div>
     </>
