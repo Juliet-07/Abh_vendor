@@ -36,9 +36,9 @@ const Layout = ({ children }) => {
       icon: <img src={InventoryIcon} />,
       submenu: true,
       submenuItems: [
-        { title: "My Products", path: "/forms/all-products" },
-        { title: "Draft Products", path: "/forms/draft-products" },
-        { title: "Discount", path: "/forms/inventory" },
+        { title: "My Products", path: "/dashboard/myProducts" },
+        { title: "Draft Products", path: "/dashboard/draftProducts" },
+        { title: "Discount", path: "/dashboard/discountProducts" },
       ],
     },
     {

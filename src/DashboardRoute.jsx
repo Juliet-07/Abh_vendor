@@ -9,6 +9,12 @@ import Settings from "./pages/settings";
 import AllOrders from "./pages/Orders/allOrders";
 import TrackOrders from "./pages/Orders/trackOrders";
 import OrderDetails from "./pages/Orders/orderDetails";
+import MyProducts from "./pages/Inventory/myProducts";
+import BulkUpload from "./pages/Inventory/bulkProducts";
+import AddProduct from "./pages/Inventory/addProduct";
+import EditProduct from "./pages/Inventory/editProduct";
+import DraftProducts from "./pages/Inventory/draftProducts";
+import Discount from "./pages/Inventory/discount";
 
 const DashboardRoute = () => {
   return (
@@ -23,6 +29,12 @@ const DashboardRoute = () => {
           <Route path="/allOrders" element={<AllOrders />} />
           <Route path="/trackOrders" element={<TrackOrders />} />
           <Route path="/orderDetails" element={<OrderDetails />} />
+          <Route path="/myProducts" element={<MyProducts />} />
+          <Route path="/bulkUpload" element={<BulkUpload />} />
+          <Route path="/addProducts" element={<AddProduct />} />
+          <Route path="/editProduct" element={<EditProduct />} />
+          <Route path="/draftProducts" element={<DraftProducts />} />
+          <Route path="/discountProducts" element={<Discount />} />
         </Routes>
       </Layout>
     </>

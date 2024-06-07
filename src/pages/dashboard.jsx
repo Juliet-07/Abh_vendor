@@ -290,7 +290,7 @@ const Dashboard = ({ title, data, onChange }) => {
             <FiSearch width={16} height={16} color="#37343566" />
           </div>
 
-          <div className="w-[350px] md:w-full min-h-[300px] bg-purple-400 overflow-x-scroll">
+          <div className="w-[350px] md:w-full min-h-[300px] overflow-x-scroll">
             <div className="flex flex-row items-center gap-4">
               <div className=" h-[56px] mt-[10px] p-[10px] flex flex-1 flex-row items-center md:justify-between bg-[#F1F4F2] border-[#C1C6C5]">
                 <b className="text-sm text-black  min-w-[164px] text-center">
