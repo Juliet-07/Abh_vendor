@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import Logo from "./Logo.jsx";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
@@ -185,43 +185,28 @@ const MobileNavigation = () => {
         >
           <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none font-primaryRegular">
             <MenuItem>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100" : "",
-                    "block px-4 py-2 text-sm text-gray-700"
-                  )}
-                >
-                  Your Profile
-                </a>
-              )}
+              <Link
+                to="/dashboard/profile"
+                className="block px-4 py-2 text-sm text-gray-700"
+              >
+                Your Profile
+              </Link>
             </MenuItem>
             <MenuItem>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100" : "",
-                    "block px-4 py-2 text-sm text-gray-700"
-                  )}
-                >
-                  Settings
-                </a>
-              )}
+              <Link
+                to="/dashboard/settings"
+                className="block px-4 py-2 text-sm text-gray-700"
+              >
+                Settings
+              </Link>
             </MenuItem>
             <MenuItem>
-              {({ active }) => (
-                <button
-                  onClick={logout}
-                  className={classNames(
-                    active ? "bg-gray-100" : "",
-                    "block px-4 py-2 text-sm text-gray-700"
-                  )}
-                >
-                  Logout
-                </button>
-              )}
+              <Link
+                onClick={logout}
+                className="block px-4 py-2 text-sm text-gray-700"
+              >
+                Logout
+              </Link>
             </MenuItem>
           </MenuItems>
         </Transition>
