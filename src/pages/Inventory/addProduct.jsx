@@ -12,7 +12,9 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const { handleSubmit } = useForm();
   const [showPreview, setPreview] = useState(false);
-  const [file, setFile] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [featuredImage, setFeaturedImage] = useState(null);
+  const [featuredImageFile, setFeaturedImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [categoryId, setCategoryId] = useState("");
@@ -56,6 +58,7 @@ const AddProduct = () => {
   const handleImageUpload = (e) => {
     console.log(e.target.files, "image");
     const file = e.target.files[0];
+    setGalleryFiles((prevFiles) => [...prevFiles, file]);
     const reader = new FileReader();
     reader.onload = () => {
       const imageDataUrl = reader.result;
@@ -65,10 +68,30 @@ const AddProduct = () => {
     // setFile(image);
   };
 
+  const handleFeaturedImageUpload = (e) => {
+    const file = e.target.files[0];
+    setFeaturedImageFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageDataUrl = reader.result;
+      setFeaturedImage(imageDataUrl);
+    };
+    reader.readAsDataURL(file);
+    // setFile(image);
+  };
+
   const handleRemoveImage = (indexToRemove) => {
     setImages((prevImages) =>
       prevImages.filter((image, index) => index !== indexToRemove)
     );
+    setGalleryFiles((prevImages) =>
+      prevImages.filter((image, index) => index !== indexToRemove)
+    );
+  };
+
+  const handleRemoveFeaturedImage = () => {
+    setFeaturedImage(null);
+    setFeaturedImageFile(null);
   };
 
   const addProduct = () => {
@@ -84,9 +107,10 @@ const AddProduct = () => {
     formData.append("price", price);
     formData.append("currency", "NGN");
     formData.append("manufacturer", manufacturer);
-    images.forEach((image) => {
+    galleryFiles.forEach((image) => {
       formData.append("product_images", image);
     });
+    formData.append("featured_image", featuredImageFile);
     setTimeout(() => {
       setLoading(false);
       axios
@@ -159,19 +183,20 @@ const AddProduct = () => {
             </p>
             <br />
             {/* Featured Images */}
-            {/* <div className="w-full min-h-[221px] bg-white p-[20px] flex flex-col">
+            <div className="w-full min-h-[221px] bg-white p-[20px] flex flex-col">
               <div className="w-full h-[94px] border-[2px] border-dashed border-[#CFCBCB] flex flex-col items-center justify-center p-[10px]">
                 <FiUploadCloud size={24} />
                 <label
-                  htmlFor="fileInput"
+                  htmlFor="featuredFileInput"
                   className="text-[#359E52] cursor-pointer active:opacity-5"
                 >
                   Upload an Image
                   <input
-                    id="fileInput"
+                    disabled={featuredImage}
+                    id="featuredFileInput"
                     type="file"
                     accept="image/png, image/jpeg"
-                    onChange={handleImageUpload}
+                    onChange={handleFeaturedImageUpload}
                     style={{ display: "none" }}
                   />
                 </label>
@@ -179,24 +204,21 @@ const AddProduct = () => {
               </div>
               <br />
               <div className="w-full flex flex-row flex-wrap gap-5">
-                {images.map((imageDataUrl, index) => (
-                  <div
-                    key={index}
-                    className="w-[71px] h-[56px] border-[0.94px] border-[#359E52] relative"
-                    style={{
-                      backgroundImage: `url(${imageDataUrl})`,
-                      backgroundSize: "cover",
-                    }}
-                  >
-                    <div className="w-[20px] h-[20px] bg-[#eaeaea] cursor-pointer active:opacity-5 rounded-[100px] flex items-center justify-center absolute right-[-5px] top-[-5px]">
-                      <button onClick={() => handleRemoveImage(index)}>
-                        <XIcon width={12} height={12} color="red" />
-                      </button>
-                    </div>
+                {featuredImage && <div
+                  className="w-[71px] h-[56px] border-[0.94px] border-[#359E52] relative"
+                  style={{
+                    backgroundImage: `url(${featuredImage})`,
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <div className="w-[20px] h-[20px] bg-[#eaeaea] cursor-pointer active:opacity-5 rounded-[100px] flex items-center justify-center absolute right-[-5px] top-[-5px]">
+                    <button onClick={() => handleRemoveFeaturedImage()}>
+                      <XIcon width={12} height={12} color="red" />
+                    </button>
                   </div>
-                ))}
+                </div>}
               </div>
-            </div> */}
+            </div>
             <br />
             <b className="text-[16px]">Gallery</b>
             <p className="text-[16px]">
