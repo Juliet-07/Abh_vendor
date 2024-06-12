@@ -35,8 +35,8 @@ const Login = () => {
       const response = await axios.post(url, loginDetails);
       console.log(response, "response");
       let accessToken = response.data.data.accessToken;
-      localStorage.setItem("adminToken", accessToken);
-      navigate("/dashboard"); // Navigate to dashboard on successful login
+      localStorage.setItem("vendorToken", accessToken);
+      navigate("/dashboard/home"); // Navigate to dashboard on successful login
     } catch (error) {
       console.error("Error in API call:", error);
       setErrorMessage("Login failed. Please check your credentials.");
