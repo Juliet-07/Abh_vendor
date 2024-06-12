@@ -204,19 +204,21 @@ const AddProduct = () => {
               </div>
               <br />
               <div className="w-full flex flex-row flex-wrap gap-5">
-                {featuredImage && <div
-                  className="w-[71px] h-[56px] border-[0.94px] border-[#359E52] relative"
-                  style={{
-                    backgroundImage: `url(${featuredImage})`,
-                    backgroundSize: "cover",
-                  }}
-                >
-                  <div className="w-[20px] h-[20px] bg-[#eaeaea] cursor-pointer active:opacity-5 rounded-[100px] flex items-center justify-center absolute right-[-5px] top-[-5px]">
-                    <button onClick={() => handleRemoveFeaturedImage()}>
-                      <XIcon width={12} height={12} color="red" />
-                    </button>
+                {featuredImage && (
+                  <div
+                    className="w-[71px] h-[56px] border-[0.94px] border-[#359E52] relative"
+                    style={{
+                      backgroundImage: `url(${featuredImage})`,
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <div className="w-[20px] h-[20px] bg-[#eaeaea] cursor-pointer active:opacity-5 rounded-[100px] flex items-center justify-center absolute right-[-5px] top-[-5px]">
+                      <button onClick={() => handleRemoveFeaturedImage()}>
+                        <XIcon width={12} height={12} color="red" />
+                      </button>
+                    </div>
                   </div>
-                </div>}
+                )}
               </div>
             </div>
             <br />

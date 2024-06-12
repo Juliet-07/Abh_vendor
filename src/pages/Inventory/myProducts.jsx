@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { XIcon } from "@heroicons/react/outline";
 import { FiSearch } from "react-icons/fi";
@@ -11,140 +12,35 @@ import Apple from "../../assets/apple.png";
 import EditPen from "../../assets/pencil.svg";
 import ViewEye from "../../assets/eye.svg";
 import DeleteCan from "../../assets/trash.svg";
+import { data } from "autoprefixer";
 
 const Myproducts = ({ pushEdit, pushAdd }) => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const navigate = useNavigate();
-  const CustomSlider = ({ settings }) => {
+  const token = localStorage.getItem("vendorToken");
+  const [productsData, setProductsData] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const CustomSlider = ({ settings, images }) => {
     return (
       <div className="slider-container p-[20px] bg-none">
         <Slider {...settings}>
-          <div
-            className="max-w-[73px] border-[1px] min-h-[55px] bg-contain  mr-5 bg-[url(/vendor_assets/apple.png)]"
-            style={{
-              background: "url(/vendor_assets/apple.png) center no-repeat",
-              backgroundSize: "cover",
-            }}
-          ></div>
-          <div
-            className="max-w-[73px] border-[1px] min-h-[55px] bg-contain  bg-[url(/vendor_assets/apple.png)]"
-            style={{
-              background: "url(/vendor_assets/apple.png) center no-repeat",
-              backgroundSize: "cover",
-            }}
-          ></div>
-          <div
-            className="max-w-[73px] border-[1px] min-h-[55px]  bg-center bg-[url(/vendor_assets/apple.png)] "
-            style={{
-              background: "url(/vendor_assets/apple.png) center no-repeat ",
-              backgroundSize: "cover",
-            }}
-          ></div>
-          <div
-            className="max-w-[73px] border-[1px] min-h-[55px] bg-contain  bg-[url(/vendor_assets/apple.png)]"
-            style={{
-              background: "url(/vendor_assets/apple.png) center no-repeat",
-              backgroundSize: "cover",
-            }}
-          ></div>
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="max-w-[73px] border min-h-[55px] bg-contain mr-5"
+              style={{
+                background: `url(${image}) center no-repeat`,
+                backgroundSize: "cover",
+              }}
+            ></div>
+          ))}
         </Slider>
       </div>
     );
   };
 
   const [filterKeyword, setfilterKeyword] = useState("");
-
-  const productsData = [
-    {
-      id: "1565132",
-      name: "Apples",
-      type: "grocery",
-      sku: "123456",
-      sold: "N/A",
-      units: 34,
-      price: "$230",
-      status: "pending",
-    },
-    {
-      id: "1565132",
-      name: "Cup",
-      type: "Merch",
-      sku: "123456",
-      sold: "N/A",
-      units: 25,
-      price: "$230",
-      status: "deleted",
-    },
-    {
-      id: "1565132",
-      name: "Mangoes",
-      type: "grocery",
-      sku: "123456",
-      sold: "55 Units",
-      units: 10,
-      price: "$230",
-      status: "live",
-    },
-    {
-      id: "1565132",
-      name: "Bread",
-      type: "grocery",
-      sku: "123456",
-      sold: "N/A",
-      units: 5,
-      price: "$230",
-      status: "pending",
-    },
-    {
-      id: "1565132",
-      name: "Apples",
-      type: "grocery",
-      sku: "123456",
-      sold: "55 Units",
-      units: 11,
-      price: "$230",
-      status: "live",
-    },
-    {
-      id: "1565132",
-      name: "Bread",
-      type: "grocery",
-      sku: "123456",
-      sold: "N/A",
-      units: 8,
-      price: "$230",
-      status: "deleted",
-    },
-    {
-      id: "1565132",
-      name: "Mangoes",
-      type: "grocery",
-      sku: "123456",
-      sold: "55 Units",
-      units: 11,
-      price: "$230",
-      status: "live",
-    },
-    {
-      id: "1565132",
-      name: "Mangoes",
-      type: "grocery",
-      sku: "123456",
-      sold: "55 Units",
-      units: 61,
-      price: "$230",
-      status: "live",
-    },
-    {
-      id: "1565132",
-      name: "Apples",
-      type: "grocery",
-      sku: "123456",
-      sold: "N/A",
-      units: 22,
-      price: "$230",
-      status: "pending",
-    },
-  ];
 
   const [showPreview, setPreview] = useState(false);
   const [showDelete, setDelete] = useState(false);
@@ -163,6 +59,64 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
     );
   };
 
+  const getStatusStyles = (status) => {
+    switch (status.toLowerCase()) {
+      case "live":
+        return {
+          bgColor: "bg-[#088D2D]/[12%]",
+          textColor: "text-[#088D2D]",
+          dotColor: "bg-[#088D2D]",
+        };
+      case "pending":
+        return {
+          bgColor: "bg-[#FB1010]/[12%]",
+          textColor: "text-[#FB1010]",
+          dotColor: "bg-[#FB1010]",
+        };
+      case "inactive":
+        return {
+          bgColor: "bg-[#8A8D08]/[12%]",
+          textColor: "text-[#8A8D08]",
+          dotColor: "bg-[#8A8D08]",
+        };
+      case "deactivated":
+        return {
+          bgColor: "bg-[#F58634]/[12%]",
+          textColor: "text-[#F58634]",
+          dotColor: "bg-[#F58634]",
+        };
+      default:
+        return {
+          bgColor: "bg-gray-200",
+          textColor: "text-gray-800",
+        };
+    }
+  };
+  useEffect(() => {
+    const getAllProducts = () => {
+      axios
+        .get(`${apiURL}/products`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response.data.data.data);
+          setProductsData(response.data.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+
+    getAllProducts();
+  }, []);
+
+  const handleViewMore = (data) => {
+    setSelectedProduct(data);
+    setPreview(true);
+  };
   return (
     <>
       {showDelete && (
@@ -208,116 +162,123 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
         </div>
       )}
 
-      {showPreview && (
-        <div
-          // onClick={()=> setPreview(false)}
-          className="w-full h-[100vh] overflow-y-scroll bg-[#000000a8] fixed z-[60000] top-0 left-0 flex flex-col items-center "
-        >
-          <div className="w-[90%] max-w-[882px] relative  bg-white rounded-[10px] p-[20px] md:p-[40px] my-[5vh]">
-            <b className="text-[16px] w-full text-center flex justify-center">
-              Product Details
-            </b>
-            <XIcon
-              width={20}
-              height={20}
-              className="absolute right-[20px] top-[20px] cursor-pointer active:opacity-5"
-              color="red"
-              onClick={() => setPreview(false)}
-            />
-            <div className="w-full flex flex-row flex-wrap mt-[20px] min-h-1 gap-2">
-              <div className="w-full min-w-[300px] min-h-[200px] flex flex-[45] flex-col">
-                <p>ID 123145</p>
-                <br />
-                <div
-                  className="w-full h-[198px] bg-contain"
-                  style={{
-                    background:
-                      "url(/vendor_assets/apple.png) center no-repeat",
-                    backgroundSize: "contain",
-                  }}
-                ></div>
-                <br />
-                <CustomSlider settings={Settings} />
-              </div>
-              <div className="w-full min-w-[300px] flex flex-[55] flex-col">
-                <br />
-                <br />
-                <b>Mint</b>
-                <p>Grocery</p>
-                {/* <br className="h-[1px]" /> */}
-                <div className="flex flex-row gap-[10px]">
-                  <b>SKU</b> <p>2122</p>
-                </div>
-                <br />
-                <p>
-                  Most fresh vegetables are low in calories and have a water
-                  content in excess of 70 percent, with only about 3.5 percent
-                  protein and less than 1 percent fat. ... The root vegetables
-                  include beets, carrots, radishes, sweet potatoes, and turnips.
-                  Stem vegetables include asparagus and kohlrabi.
-                </p>
-                <br />
-                <b>$289</b>
-                <br />
-                <div className="flex flex-row gap-[10px] ">
-                  <b>Quality</b> <p>34 Units</p>
-                </div>
-                <br />
-                <div className="text-[12px] text-black min-w-[150px] text-center flex flex-row items-center gap-2">
-                  <p>34 Units</p>
-                  <div className="w-[91px] h-[35px] bg-[#E3140F1F] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                    <div className="min-w-[8px] h-[8px] bg-[red] rounded-[100px]" />
-                    <p className="text-[red] text-[12px]">Pending</p>
+      {showPreview &&
+        selectedProduct &&
+        (() => {
+          const { bgColor, textColor, dotColor } = getStatusStyles(
+            selectedProduct.status
+          );
+          return (
+            <div className="w-full h-[100vh] overflow-y-scroll bg-[#000000a8] fixed z-50 top-0 left-0 flex flex-col items-center">
+              <div className="w-[90%] max-w-[882px] relative bg-white rounded-[10px] p-[20px] md:p-[40px] my-[5vh]">
+                <b className="text-[16px] w-full text-center flex justify-center font-primaryRegular">
+                  Product Details
+                </b>
+                <XIcon
+                  width={20}
+                  height={20}
+                  className="absolute right-[20px] top-[20px] cursor-pointer active:opacity-5"
+                  color="red"
+                  onClick={() => setPreview(false)}
+                />
+                <div className="w-full flex flex-row flex-wrap mt-[20px] min-h-1 gap-2 font-primaryRegular">
+                  <div className="w-full min-w-[300px] min-h-[200px] flex flex-[45] flex-col">
+                    <p>{selectedProduct.id}</p>
+                    <br />
+                    <div
+                      className="w-full h-[198px] bg-contain"
+                      style={{
+                        background: `url(${selectedProduct.featured_image}) center no-repeat`,
+                        backgroundSize: "contain",
+                      }}
+                    ></div>
+                    <br />
+                    <CustomSlider settings={Settings}  images={selectedProduct.images} />
+                  </div>
+                  <div className="w-full min-w-[300px] flex flex-[55] flex-col">
+                    <br />
+                    <br />
+                    <b>{selectedProduct.name}</b>
+                    <p>{selectedProduct.categoryId}</p>
+                    <div className="flex flex-row gap-[10px]">
+                      <b>SKU</b> <p>{selectedProduct.sku}</p>
+                    </div>
+                    <br />
+                    <p>{selectedProduct.description}</p>
+                    <br />
+                    <b>
+                      {selectedProduct.currency + " " + selectedProduct.price}
+                    </b>
+                    <br />
+                    <div className="flex flex-row gap-[10px]">
+                      <b>Quantity</b>
+                      <p>
+                        {selectedProduct.quantity + " " + selectedProduct.unit}
+                      </p>
+                    </div>
+                    <br />
+                    <div className="flex items-center gap-3">
+                      <b>Status</b>
+                      <div
+                        className={`h-10 ${bgColor} p-3 flex items-center justify-center gap-[10px]`}
+                      >
+                        <div
+                          className={`w-[8px] h-[8px] ${dotColor} rounded-[100px]`}
+                        />
+                        <p className={`${textColor} text-xs`}>
+                          {selectedProduct.status}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* <br /> */}
-            <br />
-            <div className="flex flex-row h-[1pc] items-center justify-between">
-              <div className="flex flex-row gap-[10px]">
-                <button
-                  onClick={() => {
-                    // window.open("#edit", "_parent")
-                    setPreview(false);
-                    pushEdit("id");
-                  }}
-                  className="md:w-[186px] w-[99px]  h-[46px] bg-[#4CBD6B] text-white rounded-[6px]"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => {
-                    setDelete(true);
-                    setPreview(false);
-                  }}
-                  className="md:w-[186px] w-[99px]  h-[46px] bg-[#E3140F] text-white rounded-[6px]"
-                >
-                  Delete
-                </button>
-              </div>
+                <br />
+                <div className="flex flex-row h-[1pc] items-center justify-between">
+                  <div className="flex flex-row gap-[10px]">
+                    <button
+                      onClick={() => {
+                        setPreview(false);
+                        pushEdit(selectedProduct.id);
+                      }}
+                      className="md:w-[186px] w-[99px] h-[46px] bg-[#4CBD6B] text-white rounded-[6px]"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDelete(true);
+                        setPreview(false);
+                      }}
+                      className="md:w-[186px] w-[99px] h-[46px] bg-[#E3140F] text-white rounded-[6px]"
+                    >
+                      Delete
+                    </button>
+                  </div>
 
-              <button
-                onClick={() => {
-                  setDelete(false);
-                  setPreview(false);
-                }}
-                className="md:w-[186px] w-[99px]  h-[46px] bg-white text-[grey] border-[1px] rounded-[6px]"
-              >
-                Cancel
-              </button>
+                  <button
+                    onClick={() => {
+                      setDelete(false);
+                      setPreview(false);
+                    }}
+                    className="md:w-[186px] w-[99px] h-[46px] bg-white text-[grey] border-[1px] rounded-[6px]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <br />
+                <br />
+              </div>
             </div>
-            <br />
-            <br />
-          </div>
-        </div>
-      )}
+          );
+        })()}
 
       <div className="w-full flex flex-col">
-        <div className="md:hidden flex items-center">My Products</div>
+        <div className="md:hidden flex items-center mb-4 font-primaryBold">
+          My Products
+        </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] flex items-center rounded-md">
+          <div className="w-full md:w-[80%] max-w-[500px] h-10 bg-white p-3 flex items-center rounded-md">
             <input
               type="text"
               className="w-full  bg-none border-none outline-none  placeholder:text-[12px] placeholder:text-[#37343566]"
@@ -345,178 +306,123 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
             </button>
           </div>
         </div>
-        {/* <div className="flex flex-col-reverse md:flex-row gap-5 justify-between">
-          <p className="font-bold text-[16px]">
-            Shop Listed Items ({[productsData].length})
-          </p>
 
-          <div className="flex flex-row items-center gap-[10px] min-w-[50%] justify-end">
-            <p className="">Quantity Level</p>
-
-            <select
-              name=""
-              id=""
-              placeholder="Select One"
-              className="border-none rounded-[6px] bg-white"
-            >
-              <option value="" disabled selected>
-                Select One
-              </option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low Stock">Low Stock</option>
-            </select>
-          </div>
-        </div> */}
-        {/* <br className="md:hidden" /> */}
-
-        <div className="w-full overflow-x-scroll overflow-y-scroll bg-white mt-4 font-primaryRegular">
-          <div className="flex flex-row items-center gap-4 ">
-            <div className=" h-[56px] flex items-center justify-between bg-[#F1F4F2] border-[#C1C6C5]">
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                ID
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                Product
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                SKU
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                Sold
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                Quantity
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                Price
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                Status
-              </b>
-              <b className="text-[14px] text-black  min-w-[150px] text-center">
-                Action
-              </b>
-            </div>
-          </div>
-          {[filterKeyword ? FilteredProducts : productsData][0].map(
-            (data, index) => {
-              return (
-                <div className="flex flex-row items-center gap-4">
-                  <div
-                    //   onClick={() => handleTabClick("order_details")}
-
-                    className="h-[56px] flex items-center justify-between border-[#C1C6C5] border-[0.66px] mt-3"
-                  >
-                    <p className="text-[12px] text-black min-w-[150px] text-center">
-                      120381
-                    </p>
-                    <div className="text-[12px] text-black min-w-[150px] text-center">
-                      <div className="flex flex-row items-center gap-2">
-                        <img src={Apple} alt="" width={50} height={50} />
-                        <div className="flex flex-col justify-start h-[40px]">
-                          <b className="">{data.name}</b>
-                          <p className="">{data.type}</p>
+        {/* products Table */}
+        <div className="my-10 w-full bg-white p-3">
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white font-primaryRegular border border-[#C1C6C5]">
+              <thead className="bg-[#F1F4F2] font-primaryBold text-sm">
+                <tr>
+                  {/* <th className="text-center p-4">ID</th> */}
+                  <th className="text-center p-4">Product Name</th>
+                  <th className="text-center p-4">SKU</th>
+                  <th className="text-center p-4">Price</th>
+                  <th className="text-center p-4">Stock</th>
+                  <th className="text-center p-4">Status</th>
+                  <th className="text-center p-4">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productsData.map((data, index) => {
+                  const { bgColor, textColor, dotColor } = getStatusStyles(
+                    data.status
+                  );
+                  return (
+                    <tr
+                      key={index}
+                      className="border text-xs font-primaryMedium"
+                    >
+                      {/* <td className="p-4 text-center">001</td> */}
+                      <td className="p-4 text-center">
+                        <div className="flex items-center gap-2 justify-center">
+                          <img
+                            src={`${data.featured_image}`}
+                            alt=""
+                            width={50}
+                            height={50}
+                            className="rounded-full"
+                          />
+                          <div className="flex flex-col">
+                            <b>{data.name}</b>
+                            <p>{data.type}</p>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <p className="text-[12px] text-black min-w-[150px] text-center">
-                      {data.sku}
-                    </p>
-                    <p className="text-[12px] text-black min-w-[150px] text-center">
-                      {data.sold}
-                    </p>
-                    <div className="text-[12px] text-black min-w-[150px] text-center flex flex-row items-center gap-2">
-                      <p>{data.units} Units</p>
-                      {data.units >= 20 && (
-                        <div className="w-[66px] h-[35px] bg-[#E38E0F14] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                          <div className="min-w-[8px] h-[8px] bg-[#E38E0F] rounded-[100px]" />
-                          <p className="text-[#E38E0F] text-[12px]">High</p>
+                      </td>
+                      <td className="p-4 text-center">{data.sku}</td>
+                      <td className="p-4 text-center">
+                        {data.currency + " " + data.price}
+                      </td>
+                      <td className="p-3 text-center">
+                        <div className="flex items-center justify-center">
+                          {data.quantity >= 20 && (
+                            <div className="w-[66px] h-[35px] bg-[#E38E0F14] p-[10px] flex items-center justify-center gap-[10px]">
+                              <div className="min-w-[8px] h-[8px] bg-[#E38E0F] rounded-full" />
+                              <p className="text-[#E38E0F] text-[12px]">High</p>
+                            </div>
+                          )}
+                          {data.quantity >= 1 && data.quantity < 10 && (
+                            <div className="w-[101px] h-[35px] bg-[#E3140F1F] p-[10px] flex items-center justify-center gap-[10px]">
+                              <div className="min-w-[8px] h-[8px] bg-red-500 rounded-full" />
+                              <p className="text-red-500 text-[12px]">
+                                Low Stock
+                              </p>
+                            </div>
+                          )}
+                          {data.quantity >= 10 && data.quantity < 20 && (
+                            <div className="w-[91px] h-[35px] bg-[#081E9314] p-[10px] flex items-center justify-center gap-[10px]">
+                              <div className="min-w-[8px] h-[8px] bg-[#081E93] rounded-full" />
+                              <p className="text-[#081E93] text-[12px]">
+                                Medium
+                              </p>
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {data.units >= 1 && data.units < 10 && (
-                        <div className="w-[101px] h-[35px] bg-[#E3140F1F] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                          <div className="min-w-[8px] h-[8px] bg-[red] rounded-[100px]" />
-                          <p className="text-[rgb(255,0,0)] text-[12px]">
-                            Low Stock
+                      </td>
+                      <td className="p-4 text-center">
+                        <div
+                          className={`w-full h-10 ${bgColor} p-3 flex items-center justify-center gap-[10px]`}
+                        >
+                          <div
+                            className={`w-[8px] h-[8px] ${dotColor} rounded-[100px]`}
+                          />
+                          <p className={`${textColor} text-xs`}>
+                            {data.status}
                           </p>
                         </div>
-                      )}
-                      {data.units >= 10 && data.units < 20 && (
-                        <div className="w-[91px] h-[35px] bg-[#081E9314] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                          <div className="min-w-[8px] h-[8px] bg-[#081E93] rounded-[100px]" />
-                          <p className="text-[#081E93] text-[12px]">Medium</p>
+                      </td>
+                      <td className="text-center">
+                        <div className="flex items-center justify-evenly">
+                          <div
+                            onClick={() => navigate("/dashboard/editProduct")}
+                            className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-full flex items-center justify-center"
+                          >
+                            <img src={EditPen} alt="" width={15} height={15} />
+                          </div>
+                          <div
+                            onClick={() => handleViewMore(data)}
+                            className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-full flex items-center justify-center"
+                          >
+                            <img src={ViewEye} alt="" width={15} height={15} />
+                          </div>
+                          <div
+                            onClick={() => setDelete(true)}
+                            className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-full flex items-center justify-center"
+                          >
+                            <img
+                              src={DeleteCan}
+                              alt=""
+                              width={15}
+                              height={15}
+                            />
+                          </div>
                         </div>
-                      )}
-                    </div>
-                    <p className="text-[12px] text-black min-w-[150px] text-center">
-                      {data.price}
-                    </p>
-                    <div className="text-[12px] text-black min-w-[150px] flex flex-row justify-center items-center">
-                      {data.status == "pending" && (
-                        <div className="min-w-[66px] h-[35px] bg-[#E3140F14] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                          <div className="w-[8px] h-[8px] bg-[#E3140F] rounded-[100px]" />
-                          <p className="text-[#E3140F] text-[12px]">pending</p>
-                        </div>
-                      )}
-                      {data.status == "live" && (
-                        <div className="min-w-[66px] h-[35px] bg-[#08932E14] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                          <div className="w-[8px] h-[8px] bg-[#08932E] rounded-[100px]" />
-                          <p className="text-[#08932E] text-[12px]">Live</p>
-                        </div>
-                      )}
-                      {data.status == "deleted" && (
-                        <div className="min-w-[66px] h-[35px] bg-[#16033F1F] p-[10px] flex flex-row items-center justify-center gap-[10px]">
-                          <div className="w-[8px] h-[8px] bg-[#16033F] rounded-[100px]" />
-                          <p className="text-[#16033F] text-[12px]">Deleted</p>
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-[12px] text-black min-w-[150px] text-center flex flex-row items-center gap-[5px]">
-                      <div
-                        onClick={() => navigate("/dashboard/editProduct")}
-                        className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-[100px] flex items-center justify-center"
-                      >
-                        {" "}
-                        <img src={EditPen} alt="" width={15} height={15} />
-                      </div>
-                      <div
-                        onClick={() => {
-                          setPreview(!showPreview);
-                        }}
-                        className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-[100px] flex items-center justify-center"
-                      >
-                        {" "}
-                        <img src={ViewEye} alt="" width={15} height={15} />
-                      </div>
-                      <div
-                        onClick={() => {
-                          setDelete(true);
-                        }}
-                        className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-[100px] flex items-center justify-center"
-                      >
-                        {" "}
-                        <img src={DeleteCan} alt="" width={15} height={15} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-          )}
-          {!productsData[0] && (
-            <div
-              className={
-                "w-full flex items-center judttify-center mt-[10vh] flex-col flex-1"
-              }
-            >
-              <p>Start by listing products</p>
-              <div
-                src=""
-                className="w-full h-[260px] mt-[20px] bg-[url(/vendor_assets/pana.png)] bg-center bg-no-repeat bg-contain"
-              />
-            </div>
-          )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>
