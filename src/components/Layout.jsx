@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
       submenuItems: [
         { title: "My Products", path: "/dashboard/myProducts" },
         { title: "Draft Products", path: "/dashboard/draftProducts" },
-        { title: "Discount", path: "/dashboard/discountProducts" },
+        // { title: "Discount", path: "/dashboard/discountProducts" },
       ],
     },
     {

@@ -6,6 +6,9 @@ import { IoWarningOutline } from "react-icons/io5";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Apple from "../../assets/apple.png";
+import EditPen from "../../assets/pencil.svg";
+import DeleteCan from "../../assets/trash.svg";
 
 const DraftProducts = ({ pushEdit, pushAdd }) => {
   const navigate = useNavigate();
@@ -359,14 +362,14 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
         </div>
       )}
 
-      <div className="w-full flex flex-col overflow-y-scroll ">
-        <div className="w-full min-h-[100vh]  flex flex-col gap-[20px] ">
-          <div className="w-full sm:hidden flex flex-row items-center h-[30px] justify-start">
+      <div className="w-full flex flex-col overflow-y-scroll">
+        <div className="w-full min-h-[100vh]  flex flex-col">
+          {/* <div className="w-full sm:hidden flex flex-row items-center h-[30px] justify-start">
             Draft Products
-          </div>
+          </div> */}
 
-          <div className="w-full h-[50px] flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="md:w-[80%] md:max-w-[500px] h-10 bg-white p-3 flex items-center rounded-md">
+          <div className="w-full h-[50px] flex flex-col md:flex-row md:items-center justify-between gap-4 font-primaryRegular">
+            <div className="hidden md:w-[80%] md:max-w-[500px] h-10 bg-white p-3 md:flex items-center rounded-md">
               <input
                 type="text"
                 className="w-full  bg-none border-none outline-none  placeholder:text-[12px] placeholder:text-[#37343566]"
@@ -395,17 +398,16 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
             </div>
           </div>
 
-          <br className="md:hidden" />
           <div className="flex flex-row flex-wrap-reverse gap-[20px] justify-between">
-            <p className="font-bold text-[16px]">
+            <p className="font-primaryBold text-[16px]">
               Total drafted products ({productsData.length})
             </p>
           </div>
           {/* <br className="md:hidden" /> */}
 
-          <div className="w-full min-h-[100vh] overflow-x-scroll overflow-y-hidden px-[10px] bg-white mt-[20px] pb-[10px]">
+          <div className="w-full min-h-[100vh] overflow-x-scroll overflow-y-hidden px-3 bg-white my-5 font-primaryRegular">
             <br />
-            <div className="w-full gap-4 flex items-center flex-row">
+            {/* <div className="w-full gap-4 flex items-center flex-row">
               <input
                 type="checkbox"
                 color="#359E52"
@@ -416,17 +418,9 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
               <button className="h-[36px] w-[143px] rounded-[6px] bg-[#359E52] text-[14px] text-white">
                 Publish
               </button>
-            </div>
+            </div> */}
 
             <div className="flex flex-row items-center gap-4">
-              <input
-                type="checkbox"
-                color="#359E52"
-                className="active:outline-[#359E52] opacity-0"
-                name=""
-                id=""
-              />
-
               <div className="md:w-full h-[56px] mt-[10px] p-[10px] flex flex-row items-center justify-between bg-[#F1F4F2] border-[#C1C6C5]">
                 <b className="text-[14px] text-black  min-w-[150px] text-center">
                   ID
@@ -449,35 +443,25 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
                 </b>
               </div>
             </div>
-
             {[filterKeyword ? FilteredProducts : productsData][0].map(
               (data, index) => {
                 return (
                   <div className="flex flex-row items-center gap-4">
-                    <input
+                    {/* <input
                       type="checkbox"
                       color="#359E52"
                       className="active:outline-[#359E52]"
                       name=""
                       id=""
-                    />
+                    /> */}
 
-                    <div
-                      //   onClick={() => handleTabClick("order_details")}
-
-                      className=" md:w-full  h-[56px] px-[10px] flex flex-row items-center justify-between border-[#C1C6C5] border-[0.66px] mt-[10px]"
-                    >
+                    <div className=" md:w-full  h-[56px] px-[10px] flex flex-row items-center justify-between border-[#C1C6C5] border-[0.66px] mt-[10px]">
                       <p className="text-[12px] text-black min-w-[150px] text-center">
                         120381
                       </p>
                       <div className="text-[12px] text-black min-w-[150px] text-center">
                         <div className="flex flex-row items-center gap-2">
-                          <img
-                            src="/vendor_assets/apple.png"
-                            alt=""
-                            width={50}
-                            height={50}
-                          />
+                          <img src={Apple} alt="" width={50} height={50} />
                           <div
                             className="flex flex-col justify-start h-[40px] active:opacity-5 cursor-pointer"
                             onClick={() => setPreview(true)}
@@ -498,22 +482,16 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
                         {/* {data.status == "pending" && ( */}
                         <div className="min-w-[66px] h-[35px] bg-[#CFCBCB] p-[10px] flex flex-row items-center justify-center gap-[10px]">
                           <div className="w-[8px] h-[8px] bg-[#373435] rounded-[100px]" />
-                          <p className="text-[#373435] text-[12px]">draft</p>
+                          <p className="text-[#373435] text-[12px]">Draft</p>
                         </div>
                         {/* )} */}
                       </div>
-                      <div className="text-[12px] text-black min-w-[150px] text-center flex flex-row items-center gap-[5px]">
+                      <div className="min-w-[150px] flex items-center justify-center gap-3">
                         <div
                           onClick={() => pushEdit("id")}
                           className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-[100px] flex items-center justify-center"
                         >
-                          {" "}
-                          <img
-                            src="/vendor_assets/pencil.svg"
-                            alt=""
-                            width={15}
-                            height={15}
-                          />
+                          <img src={EditPen} alt="" width={15} height={15} />
                         </div>
 
                         <div
@@ -522,21 +500,8 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
                           }}
                           className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-[100px] flex items-center justify-center"
                         >
-                          {" "}
-                          <img
-                            src="/vendor_assets/trash.svg"
-                            alt=""
-                            width={15}
-                            height={15}
-                          />
+                          <img src={DeleteCan} alt="" width={15} height={15} />
                         </div>
-
-                        <button
-                          onClick={() => setPublish(true)}
-                          className="h-[30px] w-[64px] rounded-[6px] bg-none text-[10px] text-[#359E52] border-[1px] border-[#359E52]"
-                        >
-                          Publish
-                        </button>
                       </div>
                     </div>
                   </div>

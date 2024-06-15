@@ -8,11 +8,9 @@ import { Settings } from "../../components/SliderSettings";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Apple from "../../assets/apple.png";
 import EditPen from "../../assets/pencil.svg";
 import ViewEye from "../../assets/eye.svg";
 import DeleteCan from "../../assets/trash.svg";
-import { data } from "autoprefixer";
 
 const Myproducts = ({ pushEdit, pushAdd }) => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -61,7 +59,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
 
   const getStatusStyles = (status) => {
     switch (status.toLowerCase()) {
-      case "live":
+      case "approved":
         return {
           bgColor: "bg-[#088D2D]/[12%]",
           textColor: "text-[#088D2D]",
@@ -92,6 +90,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
         };
     }
   };
+
   useEffect(() => {
     const getAllProducts = () => {
       axios
@@ -116,6 +115,10 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
   const handleViewMore = (data) => {
     setSelectedProduct(data);
     setPreview(true);
+  };
+  const handleEditProduct = (data) => {
+    console.log("handleEditDetails called with:", data);
+    navigate("/dashboard/editProduct", { state: { data } });
   };
   return (
     <>
@@ -183,7 +186,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                 />
                 <div className="w-full flex flex-row flex-wrap mt-[20px] min-h-1 gap-2 font-primaryRegular">
                   <div className="w-full min-w-[300px] min-h-[200px] flex flex-[45] flex-col">
-                    <p>{selectedProduct.id}</p>
+                    <b>{selectedProduct.id}</b>
                     <br />
                     <div
                       className="w-full h-[198px] bg-contain"
@@ -193,13 +196,17 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                       }}
                     ></div>
                     <br />
-                    <CustomSlider settings={Settings}  images={selectedProduct.images} />
+                    <CustomSlider
+                      settings={Settings}
+                      images={selectedProduct.images}
+                    />
                   </div>
                   <div className="w-full min-w-[300px] flex flex-[55] flex-col">
                     <br />
                     <br />
                     <b>{selectedProduct.name}</b>
-                    <p>{selectedProduct.categoryId}</p>
+                    <p>{selectedProduct?.category?.name}</p>
+                    <br />
                     <div className="flex flex-row gap-[10px]">
                       <b>SKU</b> <p>{selectedProduct.sku}</p>
                     </div>
@@ -232,15 +239,15 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                     </div>
                   </div>
                 </div>
-                <br />
-                <div className="flex flex-row h-[1pc] items-center justify-between">
+
+                <div className="flex items-center justify-between mt-10 font-primaryRegular">
                   <div className="flex flex-row gap-[10px]">
                     <button
                       onClick={() => {
                         setPreview(false);
                         pushEdit(selectedProduct.id);
                       }}
-                      className="md:w-[186px] w-[99px] h-[46px] bg-[#4CBD6B] text-white rounded-[6px]"
+                      className="md:w-[150px] w-20 h-10 bg-[#4CBD6B] text-white rounded-[6px]"
                     >
                       Edit
                     </button>
@@ -249,7 +256,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                         setDelete(true);
                         setPreview(false);
                       }}
-                      className="md:w-[186px] w-[99px] h-[46px] bg-[#E3140F] text-white rounded-[6px]"
+                      className="md:w-[150px] w-20 h-10 bg-[#E3140F] text-white rounded-[6px]"
                     >
                       Delete
                     </button>
@@ -260,13 +267,11 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                       setDelete(false);
                       setPreview(false);
                     }}
-                    className="md:w-[186px] w-[99px] h-[46px] bg-white text-[grey] border-[1px] rounded-[6px]"
+                    className="md:w-[150px] w-20 h-10 bg-white text-[grey] border rounded-md"
                   >
                     Cancel
                   </button>
                 </div>
-                <br />
-                <br />
               </div>
             </div>
           );
@@ -291,7 +296,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
             <FiSearch width={16} height={16} color="#37343566" />
           </div>
 
-          <div className="flex flex-row items-center gap-[10px]">
+          <div className="flex flex-row items-center gap-3 font-primaryRegular">
             <button
               onClick={() => navigate("/dashboard/bulkUpload")}
               className="h-[36px] w-[143px] rounded-md bg-[#F58634] text-sm text-white"
@@ -344,7 +349,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                           />
                           <div className="flex flex-col">
                             <b>{data.name}</b>
-                            <p>{data.type}</p>
+                            <p>{data?.category?.name}</p>
                           </div>
                         </div>
                       </td>
@@ -393,7 +398,7 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
                       <td className="text-center">
                         <div className="flex items-center justify-evenly">
                           <div
-                            onClick={() => navigate("/dashboard/editProduct")}
+                            onClick={() => handleEditProduct(data)}
                             className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-full flex items-center justify-center"
                           >
                             <img src={EditPen} alt="" width={15} height={15} />

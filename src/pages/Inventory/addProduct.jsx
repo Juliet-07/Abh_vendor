@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { ArrowNarrowLeftIcon, CheckIcon, XIcon } from "@heroicons/react/solid";
 import { FiUploadCloud } from "react-icons/fi";
 import Categories from "../../components/Categories";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddProduct = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -121,33 +123,39 @@ const AddProduct = () => {
         })
         .then((response) => {
           console.log(response, "response from adding products");
-          // toast.success(response.data.statusMessage);
-          // resetForm();
+          if (response.status === 201) {
+            setPreview(true);
+            setAddProductData(initialValue);
+            setFeaturedImage(null);
+            setFeaturedImageFile(null);
+            setImages([]);
+            setGalleryFiles([]);
+          }
         });
     }, 2000);
   };
 
   return (
     <>
+      <ToastContainer />
       {showPreview && (
         <div
           // onClick={()=> setPreview(false)}
-          className="w-full h-[100vh]  bg-[#000000a8] z-[10000] fixed top-0 left-0 flex flex-col items-center  justify-center"
+          className="w-full h-[100vh]  bg-[#000000a8] z-[10000] fixed top-0 left-0 flex flex-col items-center justify-center font-primaryRegular"
         >
-          <div className="w-[90%] max-w-[498px] h-[344px] bg-white p-[40px] rounded-[10px] flex flex-col items-center  justify-center">
-            <div className="w-[50px] h-[50px] rounded-[100px] border-[#08932E] border-[1px] flex flex-col items-center  justify-center">
+          <div className="w-[90%] max-w-[498px] h-[344px] bg-white rounded-lg flex flex-col items-center justify-center gap-3">
+            <div className="w-[50px] h-[50px] rounded-[100px] border-[#08932E] border flex flex-col items-center justify-center">
               <CheckIcon width={30} height={30} color="#08932E" />
             </div>
-            <br />
             <b>Product received</b>
             <p className="w-full text-center">
-              Your product has been received and is We’ll notify you once it’s
-              live
+              Your product has been received and <br />
+              is you will be notified once it is live
             </p>
             <br />
             <button
               onClick={() => setPreview(false)}
-              className="w-[186px] h-[46px] rounded-[6px] bg-[#4CBD6B] text-white"
+              className="w-[150px] h-10 rounded-md bg-[#4CBD6B] text-white font-semibold"
             >
               Okay
             </button>
@@ -351,11 +359,12 @@ const AddProduct = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex items-center justify-end my-10">
+        <div className="w-full flex items-center justify-between my-10">
+          <button className="w-[221px] h-[46px] border border-[#CFCBCB] bg-white font-primarySemibold text-black rounded-md">Save as draft</button>
           <button
             type="submit"
             // onClick={() => setPreview(true)}
-            className="w-[200px] h-[50px] bg-white rounded-md border border-[#359E52] text-[#359E52] flex items-center justify-center"
+            className="w-[221px] h-[46px] bg-white rounded-md border border-[#359E52] text-[#359E52] flex items-center justify-center"
             disabled={loading}
           >
             {loading ? (
@@ -380,7 +389,7 @@ const AddProduct = () => {
                 ></path>
               </svg>
             ) : (
-              "Add Product"
+              "Publish"
             )}
           </button>
         </div>
