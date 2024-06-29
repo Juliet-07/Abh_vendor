@@ -385,13 +385,13 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
             <div className="flex flex-row items-center gap-[10px]">
               <button
                 onClick={() => navigate("/dashboard/bulkUpload")}
-                className="h-[36px] w-[143px] rounded-[6px] bg-[#F58634]  z-[2000] text-[14px] text-white"
+                className="h-[36px] w-[143px] rounded-[6px] bg-[#F58634] text-[14px] text-white"
               >
                 Bulk upload
               </button>
               <button
                 onClick={() => navigate("/dashboard/addProducts")}
-                className="h-[36px] w-[122px] rounded-[6px] bg-none text-[14px]  z-[2000] text-[#359E52] border-[1px] border-[#359E52]"
+                className="h-[36px] w-[122px] rounded-[6px] bg-none text-[14px] text-[#359E52] border-[1px] border-[#359E52]"
               >
                 Add product
               </button>

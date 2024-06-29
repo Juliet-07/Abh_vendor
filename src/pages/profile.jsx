@@ -10,11 +10,8 @@ const Profile = () => {
   return (
     <>
       {showPreview && (
-        <div
-          // onClick={()=> setPreview(false)}
-          className="w-full h-[100vh] overflow-y-scroll bg-[#000000a8] fixed z-[60000] top-0 left-0 flex flex-col items-center "
-        >
-          <div className="w-[90%] max-w-[679px] relative  bg-white rounded-[10px] p-[20px] md:p-[40px] my-[5vh]">
+        <div className="w-full h-[100vh] overflow-y-scroll bg-[#000000a8] fixed z-[100] top-0 left-0 flex flex-col items-center font-primaryRegular">
+          <div className="w-[90%] max-w-[679px] relative bg-white rounded-[10px] p-5 my-[5vh]">
             <b className="text-[16px] w-full text-center flex justify-center">
               Edit Business Info
             </b>
@@ -25,9 +22,8 @@ const Profile = () => {
               color="red"
               onClick={() => setPreview(false)}
             />
-            <div className="w-full flex flex-row flex-wrap mt-[20px] min-h-1 gap-2"></div>
-            {/* <br /> */}
-            <br />
+            <div className="w-full flex flex-row flex-wrap min-h-1 gap-2 mt-4"></div>
+
             <p className="text-[16px] w-full">Shop Residing Country</p>
             <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
               <input
@@ -50,7 +46,7 @@ const Profile = () => {
               />
             </div>
             <br />
-            <div className="flex flex-row w-full gap-4">
+            <div className="md:flex md:flex-row w-full gap-4">
               <div className="flex flex-col w-full">
                 <p className="text-[16px] w-full">City</p>
                 <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
@@ -78,7 +74,7 @@ const Profile = () => {
               </div>
             </div>
             <br />
-            <div className="flex flex-row w-full gap-4">
+            <div className="md:flex flex-row w-full gap-4">
               <div className="flex flex-col w-full">
                 <p className="text-[16px] w-full">Business Phone Number</p>
                 <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
@@ -106,9 +102,9 @@ const Profile = () => {
               </div>
             </div>
             <br />
-            <div className="flex flex-row w-full gap-4">
+            <div className="md:flex flex-row w-full gap-4">
               <div className="flex flex-col w-full">
-                <p className="text-[16px] w-full">Business Phone Number</p>
+                <p className="text-[16px] w-full">Business Email</p>
                 <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
                   <input
                     type="text"
@@ -121,7 +117,7 @@ const Profile = () => {
               </div>
               <br />
               <div className="flex flex-col w-full">
-                <p className="text-[16px] w-full">Business mail</p>
+                <p className="text-[16px] w-full">Business Type</p>
                 <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
                   <input
                     type="text"
@@ -135,19 +131,6 @@ const Profile = () => {
             </div>
             <br />
             <div className="flex flex-row w-full gap-4">
-              <div className="flex flex-col w-full">
-                <p className="text-[16px] w-full">Business Type</p>
-                <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
-                  <input
-                    type="text"
-                    name=""
-                    id=""
-                    style={{ outline: "none" }}
-                    className="flex w-full h-[35px] border-none"
-                  />
-                </div>
-              </div>
-              <br />
               <div className="flex flex-col w-full">
                 <p className="text-[16px] w-full">
                   National Identification Number
@@ -166,7 +149,7 @@ const Profile = () => {
 
             <br />
 
-            <div className="flex flex-row w-full gap-4">
+            <div className="md:flex flex-row w-full gap-4">
               <div className="flex flex-col w-full">
                 <p className="text-[16px] w-full">Tax Identification Number</p>
                 <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
@@ -209,8 +192,7 @@ const Profile = () => {
             <br />
             <br />
 
-            {/* <div className="flex flex-row  w-full items-center justify-between"> */}
-            <div className="flex flex-row gap-[10px]  w-full justify-center">
+            <div className="w-full flex items-center justify-between my-6">
               <div>
                 <button
                   onClick={() => {
@@ -234,62 +216,73 @@ const Profile = () => {
                 Cancel
               </button>
             </div>
-            {/* </div> */}
           </div>
         </div>
       )}
 
-      <header className="w-full h-[70px] flex  bg-white  flex-row items-center justify-between p-[20px]">
+      <header className="w-full flex items-center justify-between p-3 font-primaryRegular">
         <div className="flex flex-row gap-[10px] items-center ">
           <ArrowNarrowLeftIcon
             width={20}
             height={20}
             onClick={() => navigate("/dashboard/home")}
           />
-          <p className="text-[16px]">Profile</p>
+          <p className="md:hidden">Profile</p>
+          <p className="hidden md:block">Back</p>
+        </div>
+        <div className="w-[146px] h-10 bg-white border border-[#E3140F] text-[#E3140F] rounded-lg flex items-center justify-center">
+          Delete account
         </div>
       </header>
 
-      <div className="w-full flex flex-col overflow-y-scroll my-10">
-        <div className="w-full  flex justify-center  bg-none flex-col flex-wrap md:flex-nowrap gap-[20px] ">
-          <div className="w-full min-h-[120px] rounded-[20px] relative bg-[#8BCB901F] p-[10px] flex flex-row items-center justify-between">
-            <div className="flex flex-row gap-[20px]">
+      <div className="w-full flex flex-col overflow-y-scroll my-4 font-primaryRegular">
+        <div className="w-full  flex flex-col gap-4">
+          {/* User Bio Data */}
+          <div className="w-full bg-[#8BCB901F] flex items-center justify-between rounded-[20px] p-3 md:py-4 md:px-6">
+            <div className="flex items-center gap-4 md:gap-10">
               <div className="bg-[#CFCBCB] rounded-[100px] h-[100px] w-[100px] flex items-center justify-center">
                 <UserIcon width={60} height={60} />
               </div>
 
-              <div className="flex flex-col items-start  justify-evenly">
-                <b className="text-[16px]">Kayla Samson</b>
-                <p className="text-[16px]">kaylan@gmail.com</p>
-                <p className="text-[16px]">08123122311</p>
+              <div className="flex flex-col gap-3">
+                <b className="text-sm md:text-base">Kayla Samson</b>
+                <p className="text-sm md:text-base">kaylan@gmail.com</p>
+                <p className="text-sm md:text-base">08123122311</p>
               </div>
             </div>
 
-            <b
-              className="absolute right-[20px] top-[20px] cursor-pointer active:opacity-5 "
-              onClick={() => setPreview(true)}
-            >
+            <b className=" cursor-pointer " onClick={() => setPreview(true)}>
               Edit
             </b>
           </div>
-          <div className="w-full min-h-[120px] px-[30px] rounded-[20px] relative bg-[#8BCB901F] p-[10px] py-[30px] flex flex-row flex-wrap items-start justify-evenly">
-            {/* <div className="flex flex-row flex-wr/ap w-full items-center md:justify-around"> */}
-            <div className="min-w-[235px] ">
-              <p>Shop name</p>
-              <div className="w-full h-[1px] bg-gray-600 mt-[10px]" />
-              <div className="flex flex-row items-center mt-[10px] gap-[10px]">
-                <div className="bg-[#E38E0F] w-[30px] h-[30px] rounded-full text-white flex items-center justify-center">
-                  <b>K</b>
-                </div>{" "}
-                <p>Kayla Ventures</p>
+          {/* User Other Details */}
+          <div className="w-full rounded-[20px] bg-[#8BCB901F] p-3 md:p-8 flex flex-col md:flex-row items-start justify-evenly gap-4">
+            <div className="w-full md:w-[400px] flex flex-col gap-4 md:gap-10">
+              <div className="min-w-[235px] ">
+                <p>Shop name</p>
+                <div className="w-full h-[1px] bg-gray-600 mt-[10px]" />
+                <div className="flex flex-row items-center mt-[10px] gap-[10px]">
+                  <div className="bg-[#E38E0F] w-[30px] h-[30px] rounded-full text-white flex items-center justify-center">
+                    <b>K</b>
+                  </div>{" "}
+                  <p>Kayla Ventures</p>
+                </div>
+              </div>
+              <div className="min-w-[235px] ">
+                <p>Bank Account Details</p>
+                <div className="w-full h-[1px] bg-gray-600 mt-[10px]" />
+                <div className="flex flex-col mt-[10px] gap-[10px]">
+                  <p>No payment details</p>
+                  <p className="text-red-500 mt-4 text-xs">
+                    Add your payment account information
+                  </p>
+                </div>
               </div>
             </div>
-            {/* </div> */}
 
-            <div className="w-full max-w-[669px] min-h-[50vh] md:px-[20px] border-l-[1px] md:border-[grey]">
-              <br />
+            <div className="w-full max-w-[669px] md:px-[20px] border-l md:border-[grey] md:bg-white/20 py-3">
               <p className="text-[16px] w-full">Shop Residing Country</p>
-              <div className="w-full h-[40px] border-[1px] mt-[10px] bg-white border-[#CFCBCB] flex flex-row justify-between">
+              <div className="w-full h-10 border mt-[10px] bg-white border-[#CFCBCB] flex justify-between">
                 <input
                   type="text"
                   name=""

@@ -200,10 +200,10 @@ const MobileNavigation = () => {
             </MenuItem>
             <MenuItem>
               <Link
-                to="/dashboard/settings"
+                to="/dashboard/help"
                 className="block px-4 py-2 text-sm text-gray-700"
               >
-                Settings
+                Help
               </Link>
             </MenuItem>
             <MenuItem>

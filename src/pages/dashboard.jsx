@@ -173,7 +173,7 @@ const Dashboard = ({ title, data, onChange }) => {
             </div>
           </div>
           {/* 3 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#F58634] border-[0.22px] z-[100] bg-white flex flex-col gap-4 rounded-lg p-3">
+          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#F58634] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-[40px] h-[40px] rounded-[100px] bg-[#E3140F1F] flex items-center justify-center">
                 <img src={SalesIcon} width={20} height={20} />

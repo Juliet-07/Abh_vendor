@@ -5,7 +5,6 @@ import Dashboard from "./pages/dashboard";
 import Analytics from "./pages/analytics";
 import Profile from "./pages/profile";
 import Notifications from "./pages/notifications";
-import Settings from "./pages/settings";
 import AllOrders from "./pages/Orders/allOrders";
 import TrackOrders from "./pages/Orders/trackOrders";
 import OrderDetails from "./pages/Orders/orderDetails";
@@ -15,6 +14,7 @@ import AddProduct from "./pages/Inventory/addProduct";
 import EditProduct from "./pages/Inventory/editProduct";
 import DraftProducts from "./pages/Inventory/draftProducts";
 import Discount from "./pages/Inventory/discount";
+import Help from "./pages/help";
 
 const DashboardRoute = () => {
   return (
@@ -25,7 +25,7 @@ const DashboardRoute = () => {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/allOrders" element={<AllOrders />} />
           <Route path="/trackOrders" element={<TrackOrders />} />
           <Route path="/orderDetails" element={<OrderDetails />} />

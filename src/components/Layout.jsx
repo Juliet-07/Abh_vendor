@@ -120,24 +120,39 @@ const Layout = ({ children }) => {
     );
   };
 
+  const handleToggleSidebar = () => {
+    setMiniSidebar(!miniSidebar);
+  };
+
   return (
-    <div className="flex h-screen transition-colors duration-150">
-      <div className="hidden md:flex flex-col fixed top-0 left-0 h-full w-[275px] bg-white shadow-lg">
-        <div className="flex items-center justify-center my-10">
-          <Logo className="w-[180px]" />
+    <div className="flex min-h-screen flex-col bg-gray-100 transition-colors duration-150">
+      <MobileNavigation />
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div
+          className={`hidden md:block w-[250px] h-screen bg-[#ffffff] duration-300 relative`}
+        >
+          <div className="flex items-center justify-center my-6">
+            <Logo className="w-[180px]" />
+          </div>
+          <div className="sidebar-scrollbar h-full w-full overflow-x-hidden">
+            <ul>
+              {Menus.map((menu, index) => (
+                <SidebarLinks key={index} menu={menu} index={index} />
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className="h-full overflow-y-auto">
-          <ul>
-            {Menus.map((menu, index) => (
-              <SidebarLinks key={index} menu={menu} index={index} />
-            ))}
-          </ul>
+
+        {/* Desktop Content */}
+        <div className="hidden md:block flex-1">
+          <Navbar onToggleSidebar={handleToggleSidebar} />
+          <main className="flex-1 overflow-y-auto h-[calc(100vh-64px)] pt-20 p-5 md:p-4 bg-gray-100">
+            {children}
+          </main>
         </div>
-      </div>
-      <div className="flex-1 md:ml-[275px]">
-        <Navbar />
-        <MobileNavigation />
-        <main className="flex-1 overflow-y-auto p-5 pt-20 md:p-3 bg-gray-100">
+        {/* Mobile Content */}
+        <main className="flex-1 md:hidden overflow-y-auto h-[calc(100vh-64px)] pt-20 p-5 md:p-4 bg-gray-100">
           {children}
         </main>
       </div>
