@@ -12,12 +12,17 @@ import EditPen from "../../assets/pencil.svg";
 import ViewEye from "../../assets/eye.svg";
 import DeleteCan from "../../assets/trash.svg";
 
-const Myproducts = ({ pushEdit, pushAdd }) => {
+const Myproducts = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const token = localStorage.getItem("vendorToken");
   const [productsData, setProductsData] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [filterKeyword, setfilterKeyword] = useState("");
+  const [showPreview, setPreview] = useState(false);
+  const [showDelete, setDelete] = useState(false);
+  const [FilteredProducts, setFilteredProducts] = useState([]);
+  const [showQuantityPopup, setShowQuantityPopup] = useState(false);
 
   const CustomSlider = ({ settings, images }) => {
     return (
@@ -37,13 +42,6 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
       </div>
     );
   };
-
-  const [filterKeyword, setfilterKeyword] = useState("");
-
-  const [showPreview, setPreview] = useState(false);
-  const [showDelete, setDelete] = useState(false);
-
-  const [FilteredProducts, setFilteredProducts] = useState([]);
 
   const searchForProducts = (keyword) => {
     setFilteredProducts(
@@ -116,16 +114,31 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
     setSelectedProduct(data);
     setPreview(true);
   };
+  // const handleEditProduct = (data) => {
+  //   console.log("handleEditDetails called with:", data);
+  //   navigate("/dashboard/editProduct", { state: { data } });
+  // };
+
   const handleEditProduct = (data) => {
-    console.log("handleEditDetails called with:", data);
-    navigate("/dashboard/editProduct", { state: { data } });
+    if (data.status.toLowerCase() === "approved") {
+      setSelectedProduct(data);
+      setShowQuantityPopup(true);
+    } else {
+      navigate("/dashboard/editProduct", { state: { data } });
+    }
   };
+
+  const closeQuantityPopup = () => {
+    setShowQuantityPopup(false);
+    setSelectedProduct(null);
+  };
+
   return (
     <>
       {showDelete && (
         <div
           // onClick={()=> setPreview(false)}
-          className="w-full h-[100vh]  bg-[#000000a8] z-[100000] fixed top-0 left-0 flex flex-col items-center  justify-center"
+          className="w-full h-screen  bg-[#000000a8] z-[1000] fixed top-0 left-0 flex flex-col items-center  justify-center font-primaryRegular"
         >
           <div className="w-[90%] max-w-[498px] h-[344px] relative bg-white p-[40px] rounded-[10px] flex flex-col items-center  justify-center">
             <XIcon
@@ -276,6 +289,62 @@ const Myproducts = ({ pushEdit, pushAdd }) => {
             </div>
           );
         })()}
+
+      {showQuantityPopup && selectedProduct && (
+        <div className="w-full h-screen bg-[#000000a8] z-[1000] fixed top-0 left-0 flex flex-col items-center justify-center font-primaryRegular">
+          <div className="w-[90%] max-w-[550px] relative bg-white p-6 rounded-[10px] flex flex-col">
+            <XIcon
+              width={20}
+              height={20}
+              onClick={closeQuantityPopup}
+              color="red"
+              className="absolute active:opacity-5 right-[20px] top-[20px] cursor-pointer"
+            />
+            <b className="md:text-xl text-center">Edit Stock Level</b>
+            <p className="py-2 text-xs md:text-base">ID {selectedProduct.categoryId}</p>
+            <div className="w-full flex flex-col md:flex-row items-center gap-4">
+              <div className="w-[234px] h-[198px]">
+                <img
+                  src={selectedProduct.featured_image}
+                  // className="w-[234px] h-[198px]"
+                />
+              </div>
+              <div className="grid gap-3 md:gap-6 text-left">
+                <div>
+                  <b>{selectedProduct.name}</b>
+                  <p>{selectedProduct?.category?.name}</p>
+                </div>
+
+                <div>
+                  <label className="font-primaryRegular text-sm">
+                    Quantity
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full h-[46px] p-2 border rounded mt-2"
+                    value={selectedProduct.quantity}
+                    onChange={(e) =>
+                      setSelectedProduct({
+                        ...selectedProduct,
+                        quantity: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full mt-6">
+              <button
+                // onClick={closeQuantityPopup}
+                className="w-full h-[46px] rounded-lg bg-[#4CBD6B] text-white"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="w-full flex flex-col">
         <div className="md:hidden flex items-center mb-4 font-primaryBold">

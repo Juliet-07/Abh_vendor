@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import Dropdown from "../components/Dropdown";
 import {
@@ -11,8 +12,9 @@ import OutOfStock from "../assets/out_of_stock.svg";
 import OrdersIcon from "../assets/orders_icon.svg";
 import SalesIcon from "../assets/sales_icon.svg";
 import UpArrow from "../assets/uparrow.svg";
+import Apple from "../assets/apple.png";
 
-const Dashboard = ({ title, data, onChange }) => {
+const Dashboard = () => {
   const productsData = [
     {
       id: "1565132",
@@ -133,7 +135,7 @@ const Dashboard = ({ title, data, onChange }) => {
         {/* Summary Cards */}
         <div className="w-full bg-white rounded-xl flex flex-col md:flex-row items-center md:justify-around p-4 gap-10">
           {/* 1 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#E3140F] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
+          <div className="w-full min-w-[220px] h-[115px] border-l-2 border-l-[#E3140F] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-10 h-10 rounded-full bg-[#E3140F1F] flex items-center justify-center">
                 <img src={OutOfStock} width={18} height={18} />
@@ -142,18 +144,21 @@ const Dashboard = ({ title, data, onChange }) => {
             </div>
             <div className=" w-full flex flex-row items-center justify-between">
               <div className="flex flex-row  gap-[10px]">
-                <b className="text-[18px]">4</b>
-                <p className="text-[16px]">Product</p>
+                <b className="text-[18px]">0</b>
+                <p className="text-[16px]">Products</p>
               </div>
 
-              <button className="w-[73px] h-[31px] bg-[#F0F0F0] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">
+              <Link
+                to="/dashboard/myProducts"
+                className="w-[73px] h-[31px] bg-[#F0F0F0] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]"
+              >
                 <p className="text-xs">See all</p>{" "}
                 <ChevronRightIcon width={15} height={15} />
-              </button>
+              </Link>
             </div>
           </div>
           {/* 2 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#359E52] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
+          <div className="w-full min-w-[220px] h-[115px] border-l-2 border-l-[#359E52] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-[40px] h-[40px] rounded-[100px] bg-[#8BCB9033] flex items-center justify-center">
                 <img src={OrdersIcon} width={18} height={18} />
@@ -162,18 +167,21 @@ const Dashboard = ({ title, data, onChange }) => {
             </div>
             <div className=" w-full flex flex-row items-center justify-between">
               <div className="flex flex-row  gap-[10px]">
-                <b className="text-[18px]">12</b>
+                <b className="text-[18px]">2</b>
                 <p className="text-[16px]">Pending</p>
               </div>
 
-              <button className="w-[73px] h-[31px] bg-[#F0F0F0] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">
+              <Link
+                to="/dashboard/allOrders"
+                className="w-[73px] h-[31px] bg-[#F0F0F0] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]"
+              >
                 <p className="text-xs">See all</p>{" "}
                 <ChevronRightIcon width={15} height={15} />
-              </button>
+              </Link>
             </div>
           </div>
           {/* 3 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#F58634] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
+          <div className="w-full min-w-[220px] h-[115px] border-l-2 border-l-[#F58634] border-[0.22px] bg-white flex flex-col gap-4 rounded-lg p-3">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-[40px] h-[40px] rounded-[100px] bg-[#E3140F1F] flex items-center justify-center">
                 <img src={SalesIcon} width={20} height={20} />
@@ -182,7 +190,7 @@ const Dashboard = ({ title, data, onChange }) => {
             </div>
             <div className=" w-full flex flex-row items-center justify-between">
               <div className="flex flex-row  gap-[10px]">
-                <b className="text-[18px]">$23100</b>
+                <b className="text-[18px]">$23,100</b>
               </div>
 
               <button className="w-[73px] h-[31px] bg-[#F0F0F0] text-[#0F9E36] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">
@@ -191,12 +199,25 @@ const Dashboard = ({ title, data, onChange }) => {
             </div>
           </div>
         </div>
-
+        {/* Charts */}
         <div className="w-full flex flex-col md:flex-row flex-wrap justify-between mt-10 gap-10">
           <div className="w-full md:w-[50%] h-[411px] flex flex-col bg-white rounded-xl p-4">
             <Dropdown
               title={"TOTAL ORDERS"}
-              data={["january", "feb", "march"]}
+              data={[
+                "JAN",
+                "FEB",
+                "MAR",
+                "APR",
+                "MAY",
+                "JUN",
+                "JUL",
+                "AUG",
+                "SEP",
+                "OCT",
+                "NOV",
+                "DEC",
+              ]}
               onChange={(wp) => console.log(wp)}
             />
             <br />
@@ -206,7 +227,20 @@ const Dashboard = ({ title, data, onChange }) => {
           <div className="w-full md:w-[42.5%] h-[411px] bg-white rounded-xl p-4">
             <Dropdown
               title={"REVENUE"}
-              data={["january", "feb", "march"]}
+              data={[
+                "JAN",
+                "FEB",
+                "MAR",
+                "APR",
+                "MAY",
+                "JUN",
+                "JUL",
+                "AUG",
+                "SEP",
+                "OCT",
+                "NOV",
+                "DEC",
+              ]}
               onChange={(wp) => console.log(wp)}
             />
             <br />
@@ -218,7 +252,20 @@ const Dashboard = ({ title, data, onChange }) => {
           <div className="md:w-[50%] w-full h-[411px] flex flex-col bg-white rounded-xl p-4">
             <Dropdown
               title={"ORDER STATUS"}
-              data={["january", "feb", "march"]}
+              data={[
+                "JAN",
+                "FEB",
+                "MAR",
+                "APR",
+                "MAY",
+                "JUN",
+                "JUL",
+                "AUG",
+                "SEP",
+                "OCT",
+                "NOV",
+                "DEC",
+              ]}
               onChange={(wp) => console.log(wp)}
             />
             <OrderStatusChart />
@@ -227,20 +274,60 @@ const Dashboard = ({ title, data, onChange }) => {
           <div className="md:w-[42.5%] w-full  h-[411px] overflow-y-scroll bg-white rounded-xl p-4 mt-10 gap-10 md:mt-0">
             <Dropdown
               title={"TOP PRODUCTS SOLD"}
-              data={["january", "feb", "march"]}
+              data={[
+                "JAN",
+                "FEB",
+                "MAR",
+                "APR",
+                "MAY",
+                "JUN",
+                "JUL",
+                "AUG",
+                "SEP",
+                "OCT",
+                "NOV",
+                "DEC",
+              ]}
               onChange={(wp) => console.log(wp)}
             />
 
             {[
-              { img: "", product: "Apples", type: "Grocery", price: "" },
-              { img: "", product: "Apples", type: "Grocery", price: "" },
-              { img: "", product: "Apples", type: "Grocery", price: "" },
-              { img: "", product: "Apples", type: "Grocery", price: "" },
-              { img: "", product: "Apples", type: "Grocery", price: "" },
+              {
+                img: <img src={Apple} />,
+                product: "Apples",
+                type: "Grocery",
+                price: "",
+              },
+              {
+                img: <img src={Apple} />,
+                product: "Apples",
+                type: "Grocery",
+                price: "",
+              },
+              {
+                img: <img src={Apple} />,
+                product: "Apples",
+                type: "Grocery",
+                price: "",
+              },
+              {
+                img: <img src={Apple} />,
+                product: "Apples",
+                type: "Grocery",
+                price: "",
+              },
+              {
+                img: <img src={Apple} />,
+                product: "Apples",
+                type: "Grocery",
+                price: "",
+              },
             ].map((data, index) => {
               return (
                 <div className="w-full h-[68px] mt-[10px] flex flex-row items-center justify-between border-b-[1px] border-[#CFCBCB]">
-                  <div className="w-[60px] h-[60px] border-[1px] border-[#CFCBCB]"></div>
+                  <div className="w-[60px] h-[60px] border border-[#CFCBCB] flex items-center justify-center p-1">
+                    {data.img}
+                  </div>
 
                   <div className="w-[70%] flex flex-col justify-start gap-0 px-4">
                     <p className="text-[16px] text-black  ">{data.product}</p>
@@ -259,13 +346,13 @@ const Dashboard = ({ title, data, onChange }) => {
             <div className="w-[300px] flex flex-row justify-between items-center">
               <p className="text-[16px] font-[600]">RECENT ORDERS</p>
 
-              <button
-                // onClick={seeOrders}
+              <Link
+                to="/dashboard/allOrders"
                 className="w-[73px] h-[31px] bg-[#F0F0F0] border-none outline-none flex flex-row items-center justify-center gap-2 rounded-md p-0"
               >
                 <p className="text-xs">See all</p>{" "}
                 <ChevronRightIcon width={15} height={15} />
-              </button>
+              </Link>
             </div>
 
             <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] hidden md:flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">

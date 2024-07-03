@@ -360,11 +360,19 @@ const AddProduct = () => {
           </div>
         </div>
         <div className="w-full flex items-center justify-between my-10">
-          <button className="w-[221px] h-[46px] border border-[#CFCBCB] bg-white font-primarySemibold text-black rounded-md">Save as draft</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              // Add your logic to save as draft here
+            }}
+            className="w-[168px] md:w-[221px] h-[46px] border border-[#CFCBCB] bg-white font-primarySemibold text-black rounded-md"
+          >
+            Save as draft
+          </button>
           <button
             type="submit"
             // onClick={() => setPreview(true)}
-            className="w-[221px] h-[46px] bg-white rounded-md border border-[#359E52] text-[#359E52] flex items-center justify-center"
+            className="w-[168px] md:w-[221px] h-[46px] bg-white rounded-md border border-[#359E52] text-[#359E52] flex items-center justify-center"
             disabled={loading}
           >
             {loading ? (

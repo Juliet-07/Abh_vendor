@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -141,6 +141,28 @@ const EditProduct = () => {
     }, 2000);
   };
 
+  useEffect(() => {
+    if (editProduct) {
+      setAddProductData({
+        name: editProduct.name || "",
+        quantity: editProduct.quantity || "",
+        size: editProduct.size || "",
+        unit: editProduct.unit || "",
+        description: editProduct.description || "",
+        price: editProduct.price || "",
+        currency: editProduct.currency || "NGN",
+        manufacturer: editProduct.manufacturer || "",
+        product_images: editProduct.product_images || "",
+      });
+      setCategoryId(editProduct.categoryId || "");
+      if (editProduct.images) {
+        setImages(editProduct.images.map((img) => img.url));
+      }
+      if (editProduct.featured_image) {
+        setFeaturedImage(editProduct.featured_image);
+      }
+    }
+  }, [editProduct]);
   return (
     <>
       {showPreview && (
@@ -285,7 +307,7 @@ const EditProduct = () => {
                 className="w-full border border-[#CFCBCB] p-3 my-2"
                 placeholder="Name of item"
                 name="name"
-                value={editProduct.name}
+                value={name}
                 onChange={handleChange}
               />
             </div>

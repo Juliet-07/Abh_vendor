@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import axios from "axios";
 import { FaEye } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 const AllOrders = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const navigate = useNavigate();
-  const token = localStorage.getItem("adminToken");
+  const token = localStorage.getItem("vendorToken");
   const [activeTab, setActiveTab] = useState("All");
   // const [orders, setOrders] = useState([]);
 
@@ -105,26 +106,26 @@ const AllOrders = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   const getOrders = () => {
-  //     axios
-  //       .get(`${apiURL}/vendors`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-type": "application/json; charset=UTF-8",
-  //         },
-  //       })
-  //       .then((response) => {
-  //         console.log(response.data.data.data);
-  //         setVendors(response.data.data.data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching vendors:", error);
-  //       });
-  //   };
+  useEffect(() => {
+    const getOrders = () => {
+      axios
+        .get(`${apiURL}/orders/vendor`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response.data.data.data);
+          // setVendors(response.data.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
 
-  //   getOrders();
-  // }, []);
+    getOrders();
+  }, []);
 
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "All") return true;

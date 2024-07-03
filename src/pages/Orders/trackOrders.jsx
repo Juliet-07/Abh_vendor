@@ -3,6 +3,7 @@ import { ArrowLeftIcon, MenuIcon } from "@heroicons/react/outline";
 import { CheckIcon } from "@heroicons/react/solid";
 import { FiBell, FiUser } from "react-icons/fi";
 import Tracker from "../../assets/tracker.png";
+import { Link } from "react-router-dom";
 
 const TrackOrders = () => {
   const [showRecords, setRecords] = useState(false);
@@ -42,9 +43,12 @@ const TrackOrders = () => {
           <div className="flex flex-row items-center justify-center gap-3 font-primaryRegular">
             <p className="md:text-lg text-base flex flex-row items-center gap-2">
               Need Assistance{" "}
-              <p className="text-[#359E52] md:text-[18px] cursor-pointer text-base">
+              <Link
+                to="/dashboard/help"
+                className="text-[#359E52] md:text-[18px] cursor-pointer text-base"
+              >
                 Get help
-              </p>
+              </Link>
             </p>
           </div>
         </div>
