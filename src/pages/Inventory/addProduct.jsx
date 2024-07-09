@@ -20,6 +20,10 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [categoryId, setCategoryId] = useState("");
+  const [selectSize, setSize] = useState("");
+  const [footSize, setFootSize] = useState("");
+  const [showFootSizes, setShowFootSizes] = useState(false);
+  const [selectUnit, setUnit] = useState("");
 
   const initialValue = {
     name: "",
@@ -50,6 +54,26 @@ const AddProduct = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAddProductData({ ...addProductData, [name]: value });
+  };
+
+  const handleSizeChange = (e) => {
+    const value = e.target.value;
+    setSize(value);
+    if (value === "foot") {
+      setShowFootSizes(true);
+    } else {
+      setShowFootSizes(false);
+      setFootSize("");
+    }
+  };
+
+  const handleFootSizeChange = (e) => {
+    setFootSize(e.target.value);
+  };
+
+  const handleUnitChange = (e) => {
+    const { name, value } = e.target;
+    setUnit(value);
   };
 
   const handleCategoryInfo = useCallback((data) => {
@@ -102,8 +126,8 @@ const AddProduct = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("quantity", quantity);
-    formData.append("size", size);
-    formData.append("unit", unit);
+    formData.append("size", selectSize);
+    formData.append("unit", selectUnit);
     formData.append("categoryId", categoryId);
     formData.append("description", description);
     formData.append("price", price);
@@ -250,6 +274,7 @@ const AddProduct = () => {
                     accept="image/png, image/jpeg"
                     onChange={handleImageUpload}
                     style={{ display: "none" }}
+                    multiple
                   />
                 </label>
                 <p className="max-w-[217px]">or drag and drop PNG, JPG</p>
@@ -301,25 +326,55 @@ const AddProduct = () => {
             </div>
             <div>
               <label className="text-base">Size</label>
-              <input
-                type="number"
+              <select
                 className="w-full border border-[#CFCBCB] p-3 my-2"
-                placeholder="Size of item"
                 name="size"
-                value={size}
-                onChange={handleChange}
-              />
-            </div>
+                value={selectSize}
+                onChange={handleSizeChange}
+              >
+                <option value="">Select Size</option>
+                <option value="gm">Gram</option>
+                <option value="kg">Kilogram</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="xtraLarge">Xtra Large</option>
+                <option value="foot">Foot</option>
+              </select>
+
+              {showFootSizes && (
+                <select
+                  className="w-full border border-[#CFCBCB] p-3 my-2"
+                  name="footSize"
+                  value={footSize}
+                  onChange={handleFootSizeChange}
+                >
+                  <option value="">Select Foot Size</option>
+                  <option value="36">Size 36</option>
+                  <option value="38">Size 38</option>
+                  <option value="39">Size 39</option>
+                  <option value="40">Size 40</option>
+                  <option value="41">Size 41</option>
+                  <option value="42">Size 42</option>
+                  <option value="43">Size 43</option>
+                  <option value="44">Size 44</option>
+                  <option value="45">Size 45</option>
+                  <option value="46">Size 46</option>
+                </select>
+              )}
+            </div>{" "}
             <div>
               <label className="text-base">Unit</label>
-              <input
-                type="text"
+              <select
                 className="w-full border border-[#CFCBCB] p-3 my-2"
-                placeholder="KG"
-                name="unit"
-                value={unit}
-                onChange={handleChange}
-              />
+                name="selectUnit"
+                value={selectUnit}
+                onChange={handleUnitChange}
+              >
+                <option value="">Select Unit</option>
+                <option value="units">Units</option>
+                <option value="cartons">Cartons</option>
+              </select>
             </div>
             <div>
               <label className="text-base">Manufacturer</label>

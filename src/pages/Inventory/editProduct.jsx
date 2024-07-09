@@ -201,7 +201,7 @@ const EditProduct = () => {
         onSubmit={handleSubmit(addProduct)}
         className="w-full flex flex-col overflow-y-scroll my-6 md:my-10 font-primaryRegular"
       >
-        <div className="w-full flex flex-row justify-evenly  flex-wrap md:flex-nowrap gap-5">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-5 md:gap-20">
           {/* form one */}
           <div
             className="w-full p-[20px] min-h-[100vh] md:rounded-[10px]
@@ -357,6 +357,12 @@ const EditProduct = () => {
             </div>
             <div>
               <label className="text-base">Category</label>
+              <div className="w-full border border-[#CFCBCB] p-3 my-2">
+                {editProduct.category.name}
+              </div>
+            </div>
+            <div>
+              <label className="text-base">Change Category</label>
               <Categories onForm={handleCategoryInfo} />
             </div>
             <div>
