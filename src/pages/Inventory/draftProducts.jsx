@@ -364,10 +364,6 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
 
       <div className="w-full flex flex-col overflow-y-scroll">
         <div className="w-full min-h-[100vh]  flex flex-col">
-          {/* <div className="w-full sm:hidden flex flex-row items-center h-[30px] justify-start">
-            Draft Products
-          </div> */}
-
           <div className="w-full h-[50px] flex flex-col md:flex-row md:items-center justify-between gap-4 font-primaryRegular">
             <div className="hidden md:w-[80%] md:max-w-[500px] h-10 bg-white p-3 md:flex items-center rounded-md">
               <input
@@ -398,7 +394,7 @@ const DraftProducts = ({ pushEdit, pushAdd }) => {
             </div>
           </div>
 
-          <div className="flex flex-row flex-wrap-reverse gap-[20px] justify-between">
+          <div className="md:hidden flex flex-row flex-wrap-reverse gap-[20px] justify-between">
             <p className="font-primaryBold text-[16px]">
               Total drafted products ({productsData.length})
             </p>

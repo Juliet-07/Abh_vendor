@@ -301,7 +301,9 @@ const Myproducts = () => {
               className="absolute active:opacity-5 right-[20px] top-[20px] cursor-pointer"
             />
             <b className="md:text-xl text-center">Edit Stock Level</b>
-            <p className="py-2 text-xs md:text-base">ID {selectedProduct.categoryId}</p>
+            <p className="py-2 text-xs md:text-base">
+              ID {selectedProduct.categoryId}
+            </p>
             <div className="w-full flex flex-col md:flex-row items-center gap-4">
               <div className="w-[234px] h-[198px]">
                 <img
@@ -388,7 +390,7 @@ const Myproducts = () => {
               <thead className="bg-[#F1F4F2] font-primaryBold text-sm">
                 <tr>
                   {/* <th className="text-center p-4">ID</th> */}
-                  <th className="text-center p-4">Product Name</th>
+                  <th className="text-left p-4">Product Name</th>
                   <th className="text-center p-4">SKU</th>
                   <th className="text-center p-4">Price</th>
                   <th className="text-center p-4">Stock</th>
@@ -406,9 +408,8 @@ const Myproducts = () => {
                       key={index}
                       className="border text-xs font-primaryMedium"
                     >
-                      {/* <td className="p-4 text-center">001</td> */}
-                      <td className="p-4 text-center">
-                        <div className="flex items-center gap-2 justify-center">
+                      <td className="p-4 text-left">
+                        <div className="flex gap-2">
                           <img
                             src={`${data.featured_image}`}
                             alt=""
@@ -416,9 +417,11 @@ const Myproducts = () => {
                             height={50}
                             className="rounded-full"
                           />
-                          <div className="flex flex-col">
-                            <b>{data.name}</b>
-                            <p>{data?.category?.name}</p>
+                          <div className="w-[100px] flex flex-col gap-2">
+                            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                              {data.name}
+                            </p>
+                            <b>{data?.category?.name}</b>
                           </div>
                         </div>
                       </td>

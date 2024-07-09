@@ -176,9 +176,9 @@ const AddProduct = () => {
 
       <form
         onSubmit={handleSubmit(addProduct)}
-        className="w-full flex flex-col overflow-y-scroll my-6 md:my-10 font-primaryRegular"
+        className="w-full flex flex-col overflow-y-scroll my-4 md:my-6 font-primaryRegular"
       >
-        <div className="w-full flex flex-row justify-evenly  flex-wrap md:flex-nowrap gap-5">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-5 md:gap-20">
           {/* form one */}
           <div
             className="w-full p-[20px] min-h-[100vh] md:rounded-[10px]
@@ -191,7 +191,7 @@ const AddProduct = () => {
             </p>
             <br />
             {/* Featured Images */}
-            <div className="w-full min-h-[221px] bg-white p-[20px] flex flex-col">
+            <div className="w-full min-h-[300px] bg-white p-[20px] flex flex-col">
               <div className="w-full h-[94px] border-[2px] border-dashed border-[#CFCBCB] flex flex-col items-center justify-center p-[10px]">
                 <FiUploadCloud size={24} />
                 <label
@@ -276,7 +276,7 @@ const AddProduct = () => {
             </div>
           </div>
           {/* form two */}
-          <div className="w-full p-5 md:max-w-[596px] min-h-[100vh] md:rounded-xl border bg-white grid">
+          <div className="w-full p-5 min-h-[100vh] md:rounded-xl border bg-white grid">
             <div>
               <label className="text-base">Product Name</label>
               <input

@@ -7,7 +7,7 @@ const BulkUpload = () => {
 
   const [bulkArray, setbulkArray] = useState([
     {
-      id: Math.random(new Range(1, 2000)),
+      // id: Math.random(new Range(1, 2000)),
       productName: "",
       ProductDescription: "",
       Quantity_in_Units_or_Carton: "",
@@ -22,7 +22,7 @@ const BulkUpload = () => {
     setbulkArray((prev) => [
       ...prev,
       {
-        id: Math.random(new Range(1, 2000)),
+        // id: Math.random(new Range(1, 2000)),
         productName: "",
         ProductDescription: "",
         Quantity_in_Units_or_Carton: "",
@@ -66,12 +66,12 @@ const BulkUpload = () => {
       </div>
 
       <div className="bg-white my-10">
-        <div className="w-full min-h-[300px] overflow-x-scroll">
+        <div className="w-full min-h-[300px] overflow-auto">
           <div className="flex flex-row items-center gap-4">
             <div className=" h-[56px] mt-[10px] p-[10px] flex flex-1 flex-row items-center md:justify-between bg-[#F1F4F2] border-[#C1C6C5]">
-              <b className="text-[14px] text-black  min-w-[164px] text-center">
+              {/* <b className="text-[14px] text-black  min-w-[164px] text-center">
                 ID
-              </b>
+              </b> */}
               <b className="text-[14px] text-black  min-w-[164px] text-center">
                 Product Name
               </b>
@@ -93,19 +93,22 @@ const BulkUpload = () => {
               <b className="text-[14px] text-black  min-w-[164px] text-center">
                 Price in Naira or Dollar
               </b>
+              <b className="text-[14px] text-black  min-w-[164px] text-center">
+                Image
+              </b>
             </div>
           </div>
           {bulkArray.map((data, index) => {
             return (
               <div className="flex flex-row items-center gap-4 ">
-                <div className="h-[70px] px-[10px] flex flex-1 flex-row items-center justify-between border-[#F1F4F2] border-[0.66px] mt-[10px]">
-                  <p className="text-[14px] text-black min-w-[164px] text-center">
+                <div className="h-[70px] px-[10px] flex flex-1 flex-row items-center justify-between border-[#F1F4F2] border mt-[10px]">
+                  {/* <p className="text-[14px] text-black min-w-[164px] text-center">
                     <input
                       type="text"
                       placeholder=" input here"
                       className="border-[1px] border-[#F1F4F2] h-[60px] w-[100px]"
                     />
-                  </p>
+                  </p> */}
                   <p className="text-[12px] text-black min-w-[164px] text-center">
                     <input
                       type="text"
@@ -170,6 +173,16 @@ const BulkUpload = () => {
                     <input
                       type="text"
                       placeholder=" input here"
+                      className="border-[1px] border-[#F1F4F2] h-[60px] w-[100px]"
+                      onInput={(e) =>
+                        InputBulk(data.id, "productName", e.target.value)
+                      }
+                    />
+                  </p>
+                  <p className="text-[12px] text-black min-w-[164px] text-center">
+                    <input
+                      type="text"
+                      placeholder=" image "
                       className="border-[1px] border-[#F1F4F2] h-[60px] w-[100px]"
                       onInput={(e) =>
                         InputBulk(data.id, "productName", e.target.value)

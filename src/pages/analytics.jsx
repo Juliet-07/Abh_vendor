@@ -11,9 +11,9 @@ const Analytics = () => {
   return (
     <>
       <div className="w-full font-primaryRegular bg-red-00 overflow-y-scroll">
-        <div className="w-full bg-white rounded-xl gap-10 flex items-center justify-around p-4 flex-wrap">
+        <div className="w-full bg-white rounded-xl gap-10 flex flex-col md:flex-row items-center justify-around p-4">
           {/* 1 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#1226D7] border-[0.22px] bg-white p-3 flex flex-col gap-4 rounded-lg">
+          <div className="w-full min-w-[220px] h-[115px] border-l-2 border-l-[#1226D7] border-[0.22px] bg-white p-3 flex flex-col gap-4 rounded-lg">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-[40px] h-[40px] rounded-[100px] bg-[#1226D71F] flex items-center justify-center">
                 <img src={Strike} width={18} height={18} />
@@ -34,7 +34,7 @@ const Analytics = () => {
             </div>
           </div>
           {/* 2 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#359E52] border-[0.22px] bg-white p-3 flex flex-col gap-4 rounded-lg">
+          <div className="w-full min-w-[220px] h-[115px] border-l-2 border-l-[#359E52] border-[0.22px] bg-white p-3 flex flex-col gap-4 rounded-lg">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-[40px] h-[40px] rounded-[100px] bg-[#1226D71F] flex items-center justify-center">
                 <img src={OrdersIcon} width={18} height={18} />
@@ -55,7 +55,7 @@ const Analytics = () => {
             </div>
           </div>
           {/* 3 */}
-          <div className="w-full md:w-[245px] h-[115px] border-l-2 border-l-[#079D9D] border-[0.22px] bg-white p-3 flex flex-col gap-4 rounded-lg">
+          <div className="w-full min-w-[220px] h-[115px] border-l-2 border-l-[#079D9D] border-[0.22px] bg-white p-3 flex flex-col gap-4 rounded-lg">
             <div className="flex flex-row items-center gap-[10px]">
               <div className="w-[40px] h-[40px] rounded-[100px] bg-[#079D9D1F] flex items-center justify-center">
                 <img src={Cart} width={20} height={20} />
