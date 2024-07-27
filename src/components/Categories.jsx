@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "react-select";
 
-const Categories = ({onForm}) => {
+const Categories = ({ onForm, className }) => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const token = localStorage.getItem("vendorToken");
   const [inputValue, setValue] = useState("");
