@@ -8,6 +8,7 @@ const Categories = ({ onForm, className }) => {
   const [inputValue, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
   const [Categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
 
   //   handle input change event
   const handleInputChange = (value) => {
@@ -16,10 +17,31 @@ const Categories = ({ onForm, className }) => {
   };
 
   //   handle selection
-  const handleChange = (value) => {
-    console.log(value, "values");
-    onForm(value);
-    setSelectedValue(value);
+  const handleChange = (selectedOption) => {
+    console.log(selectedOption, "values");
+    onForm(selectedOption, "category");
+    setSelectedValue(selectedOption);
+
+    const category = Categories.find(
+      (cat) => cat.value === selectedOption.value
+    );
+
+    if (category && category.subcategories.length) {
+      const subCategoriesOptions = category.subcategories.map(
+        (subCat, index) => ({
+          value: `${selectedOption.value}-${index}`,
+          label: subCat,
+        })
+      );
+      setSubCategories(subCategoriesOptions);
+    } else {
+      setSubCategories([]);
+    }
+  };
+
+  const handleSubCategoryChange = (selectedOption) => {
+    console.log("Selected subcategory:", selectedOption);
+    onForm(selectedOption, "subcategory");
   };
 
   useEffect(() => {
@@ -34,10 +56,14 @@ const Categories = ({ onForm, className }) => {
           },
         })
         .then((response) => {
-          console.log(response.data.data.data, "categories");
-          info = response.data.data.data;
+          console.log(response.data.data.items, "categories");
+          info = response.data.data.items;
           categories = info.map((category) => {
-            return { value: category.id, label: category.name };
+            return {
+              value: category._id,
+              label: category.name,
+              subcategories: category.subcategories,
+            };
           });
           setCategories(categories);
         })
@@ -57,6 +83,17 @@ const Categories = ({ onForm, className }) => {
         onInputChange={handleInputChange}
         isSearchable
       />
+      {subCategories.length > 0 && (
+        <div className="mt-4">
+          <label className="text-base">Sub Category</label>
+          <Select
+            options={subCategories}
+            onChange={handleSubCategoryChange}
+            isSearchable
+            className="mt-4"
+          />
+        </div>
+      )}
     </div>
   );
 };

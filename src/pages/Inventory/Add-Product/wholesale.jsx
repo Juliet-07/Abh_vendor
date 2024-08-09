@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowNarrowLeftIcon, CheckIcon, XIcon } from "@heroicons/react/solid";
-import { FiBell, FiUploadCloud, FiUser } from "react-icons/fi";
-import Categories from "../../components/Categories";
-// import Select from 'react-select';
+import { FiUploadCloud } from "react-icons/fi";
+import Categories from "../../../components/Categories";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ColorSelect from "../../../components/Colors";
 
-const EditProduct = () => {
+const AddWholesaleProduct = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const token = localStorage.getItem("vendorToken");
-  const { handleSubmit } = useForm();
-  const location = useLocation();
-  const editProduct = location.state && location.state.data;
-  console.log("Details", editProduct);
   const navigate = useNavigate();
+  const { handleSubmit } = useForm();
   const [showPreview, setPreview] = useState(false);
   const [galleryFiles, setGalleryFiles] = useState([]);
   const [featuredImage, setFeaturedImage] = useState(null);
@@ -22,14 +21,18 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [categoryId, setCategoryId] = useState("");
-
-  if (!editProduct) {
-    return <div>No details available</div>;
-  }
+  const [subCategoryId, setSubCategoryId] = useState("");
+  const [selectSize, setSize] = useState("");
+  const [footSize, setFootSize] = useState("");
+  const [showFootSizes, setShowFootSizes] = useState(false);
+  const [selectUnit, setUnit] = useState("");
+  const [color, setColor] = useState("");
 
   const initialValue = {
     name: "",
     quantity: "",
+    unitPerCaton: "",
+    maximumOrderPerCarton: "",
     size: "",
     unit: "",
     description: "",
@@ -44,6 +47,8 @@ const EditProduct = () => {
   const {
     name,
     quantity,
+    unitPerCaton,
+    maximumOrderPerCarton,
     size,
     unit,
     description,
@@ -58,9 +63,60 @@ const EditProduct = () => {
     setAddProductData({ ...addProductData, [name]: value });
   };
 
-  const handleCategoryInfo = useCallback((data) => {
+  const handleSizeChange = (e) => {
+    const value = e.target.value;
+    setSize(value);
+    if (value === "foot") {
+      setShowFootSizes(true);
+    } else {
+      setShowFootSizes(false);
+      setFootSize("");
+    }
+  };
+
+  const handleFootSizeChange = (e) => {
+    setFootSize(e.target.value);
+  };
+
+  const handleUnitChange = (e) => {
+    const { name, value } = e.target;
+    setUnit(value);
+  };
+
+  // const handleColourInfo = useCallback((data) => {
+  //   let selectedColors = [];
+  //   console.log({ data });
+  //   const colorArray = selectedColors.map((color) => color.label);
+  //   setColors(colorArray);
+  //   console.log(colorArray, "selected colors");
+  // }, []);
+
+  const handleColourInfo = useCallback((data) => {
+    // Check if selectedColors is an array and has items
+    // if (Array.isArray(selectedColors) && selectedColors.length > 0) {
+    //   const colorArray = selectedColors.map((color) => color.label);
+    //   setColors(colorArray);
+    //   console.log(colorArray, "selected colors");
+    // } else {
+    //   console.log("No colors selected");
+    // }
     console.log({ data });
-    setCategoryId(data.value);
+    setColor(data.label);
+  }, []);
+
+  const handleCategoryInfo = useCallback((data, type) => {
+    console.log({ data, type });
+    if (type === "category") {
+      setCategoryId(data.value);
+      console.log(categoryId, "category id check");
+    } else if (type === "subcategory") {
+      setSubCategoryId(data.value);
+    }
+  }, []);
+
+  const handleSubCategoryInfo = useCallback((data) => {
+    console.log({ data });
+    setSubCategoryId(data.value);
   }, []);
 
   const handleImageUpload = (e) => {
@@ -104,21 +160,28 @@ const EditProduct = () => {
 
   const addProduct = () => {
     setLoading(true);
-    const url = `${apiURL}/products`;
+    const url = `${apiURL}/products/wholesale`;
     const formData = new FormData();
     formData.append("name", name);
     formData.append("quantity", quantity);
-    formData.append("size", size);
-    formData.append("unit", unit);
+    formData.append("size", selectSize);
+    formData.append("unit", "unit");
     formData.append("categoryId", categoryId);
+    formData.append("subCategoryId", subCategoryId);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("currency", "NGN");
     formData.append("manufacturer", manufacturer);
+    formData.append("maximumOrderPerCarton", maximumOrderPerCarton);
+    formData.append("unitPerCarton", unitPerCaton);
     galleryFiles.forEach((image) => {
       formData.append("product_images", image);
     });
     formData.append("featured_image", featuredImageFile);
+    formData.append("color", color);
+    // colors.forEach((color) => {
+    //   formData.append("color", colors);
+    // });
     setTimeout(() => {
       setLoading(false);
       axios
@@ -136,76 +199,48 @@ const EditProduct = () => {
             setFeaturedImageFile(null);
             setImages([]);
             setGalleryFiles([]);
+            setColor("");
+            setCategoryId("")
           }
         });
     }, 2000);
   };
-
-  useEffect(() => {
-    if (editProduct) {
-      setAddProductData({
-        name: editProduct.name || "",
-        quantity: editProduct.quantity || "",
-        size: editProduct.size || "",
-        unit: editProduct.unit || "",
-        description: editProduct.description || "",
-        price: editProduct.price || "",
-        currency: editProduct.currency || "NGN",
-        manufacturer: editProduct.manufacturer || "",
-        product_images: editProduct.product_images || "",
-      });
-      setCategoryId(editProduct.categoryId || "");
-      if (editProduct.images) {
-        setImages(editProduct.images.map((img) => img.url));
-      }
-      if (editProduct.featured_image) {
-        setFeaturedImage(editProduct.featured_image);
-      }
-    }
-  }, [editProduct]);
   return (
     <>
+      <ToastContainer />
       {showPreview && (
         <div
           // onClick={()=> setPreview(false)}
-          className="w-full h-[100vh]  bg-[#000000a8] z-[10000] fixed top-0 left-0 flex flex-col items-center  justify-center"
+          className="w-full h-[100vh]  bg-[#000000a8] z-[10000] fixed top-0 left-0 flex flex-col items-center justify-center font-primaryRegular"
         >
-          <div className="w-[90%] max-w-[498px] h-[344px] bg-white rounded-[10px] flex flex-col items-center  justify-center">
-            <div className="w-[50px] h-[50px] rounded-[100px] border-[#08932E] border-[1px] flex flex-col items-center  justify-center">
+          <div className="w-[90%] max-w-[498px] h-[344px] bg-white rounded-lg flex flex-col items-center justify-center gap-3">
+            <div className="w-[50px] h-[50px] rounded-[100px] border-[#08932E] border flex flex-col items-center justify-center">
               <CheckIcon width={30} height={30} color="#08932E" />
             </div>
-            <br />
-            <p>Product updated successfully</p>
+            <b>Product received</b>
+            <p className="w-full text-center">
+              Your product has been received and <br />
+              is you will be notified once it is live
+            </p>
             <br />
             <button
               onClick={() => setPreview(false)}
-              className="w-[186px] h-[46px] rounded-[6px] bg-[#4CBD6B] text-white"
+              className="w-[150px] h-10 rounded-md bg-[#4CBD6B] text-white font-semibold"
             >
               Okay
             </button>
           </div>
         </div>
       )}
-      <header className="w-full h-[70px] flex  bg-white  flex-row items-center justify-between p-4">
-        <div className="flex flex-row gap-[10px] items-center cursor-pointer">
-          <ArrowNarrowLeftIcon
-            width={20}
-            height={20}
-            onClick={() => navigate("/dashboard/myProducts")}
-          />
-          <p className="font-primaryRegular">Edit Product</p>
-        </div>
-      </header>
-
       <form
         onSubmit={handleSubmit(addProduct)}
-        className="w-full flex flex-col overflow-y-scroll my-6 md:my-10 font-primaryRegular"
+        className="w-full flex flex-col overflow-y-scroll my-4 md:my-6 font-primaryRegular"
       >
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-5 md:gap-20">
+        <div className="w-full flex flex-col md:flex-row items-stretch justify-between gap-5 md:gap-20">
           {/* form one */}
           <div
             className="w-full p-[20px] min-h-[100vh] md:rounded-[10px]
-           border-[1px] border-[#CFCBCB] md:max-w-[426px]"
+             border-[1px] border-[#CFCBCB] md:max-w-[426px]"
           >
             <b className="text-[16px]">Featured Image</b>
             <p className="text-[16px]">
@@ -214,7 +249,7 @@ const EditProduct = () => {
             </p>
             <br />
             {/* Featured Images */}
-            <div className="w-full min-h-[221px] bg-white p-[20px] flex flex-col">
+            <div className="w-full min-h-[300px] bg-white p-[20px] flex flex-col">
               <div className="w-full h-[94px] border-[2px] border-dashed border-[#CFCBCB] flex flex-col items-center justify-center p-[10px]">
                 <FiUploadCloud size={24} />
                 <label
@@ -273,6 +308,7 @@ const EditProduct = () => {
                     accept="image/png, image/jpeg"
                     onChange={handleImageUpload}
                     style={{ display: "none" }}
+                    multiple
                   />
                 </label>
                 <p className="max-w-[217px]">or drag and drop PNG, JPG</p>
@@ -299,7 +335,7 @@ const EditProduct = () => {
             </div>
           </div>
           {/* form two */}
-          <div className="w-full p-5 md:max-w-[596px] min-h-[100vh] md:rounded-xl border bg-white grid">
+          <div className="w-full p-5 min-h-[100vh] md:rounded-xl border bg-white grid">
             <div>
               <label className="text-base">Product Name</label>
               <input
@@ -311,8 +347,22 @@ const EditProduct = () => {
                 onChange={handleChange}
               />
             </div>
+            <div className="mb-4">
+              <label className="text-base">Category</label>
+              <Categories onForm={handleCategoryInfo} />
+            </div>
+            {/* {categoryId && (
+              <div className="mb-4">
+                <label className="text-base">Sub Category</label>
+                <Categories
+                  onForm={handleCategoryInfo}
+                  //   parentId={categoryId}
+                />
+              </div>
+            )} */}
+
             <div>
-              <label className="text-base">Quantity</label>
+              <label className="text-base">Quantity (in cartons)</label>
               <input
                 type="number"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
@@ -323,47 +373,82 @@ const EditProduct = () => {
               />
             </div>
             <div>
-              <label className="text-base">Size</label>
+              <label className="text-base">Units per carton</label>
               <input
                 type="number"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
-                placeholder="Size of item"
-                name="size"
-                value={size}
+                placeholder="Number of item"
+                name="unitPerCaton"
+                value={unitPerCaton}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className="text-base">Unit</label>
-              <input
-                type="text"
+              <label className="text-base">Size</label>
+              <select
                 className="w-full border border-[#CFCBCB] p-3 my-2"
-                placeholder="KG"
-                name="unit"
-                value={unit}
-                onChange={handleChange}
-              />
+                name="size"
+                value={selectSize}
+                onChange={handleSizeChange}
+              >
+                <option value="">Select Size</option>
+                <option value="gm">Gram</option>
+                <option value="kg">Kilogram</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="xtraLarge">Xtra Large</option>
+                <option value="foot">Foot</option>
+              </select>
+
+              {showFootSizes && (
+                <select
+                  className="w-full border border-[#CFCBCB] p-3 my-2"
+                  name="footSize"
+                  value={footSize}
+                  onChange={handleFootSizeChange}
+                >
+                  <option value="">Select Foot Size</option>
+                  <option value="36">Size 36</option>
+                  <option value="38">Size 38</option>
+                  <option value="39">Size 39</option>
+                  <option value="40">Size 40</option>
+                  <option value="41">Size 41</option>
+                  <option value="42">Size 42</option>
+                  <option value="43">Size 43</option>
+                  <option value="44">Size 44</option>
+                  <option value="45">Size 45</option>
+                  <option value="46">Size 46</option>
+                </select>
+              )}
             </div>
+            <div className="mb-4">
+              <label className="text-base">Color</label>
+              <ColorSelect onForm={handleColourInfo} />
+            </div>
+            {/* <div>
+              <label className="text-base">Unit</label>
+              <select
+                className="w-full border border-[#CFCBCB] p-3 my-2"
+                name="selectUnit"
+                value={selectUnit}
+                onChange={handleUnitChange}
+              >
+                <option value="">Select Unit</option>
+                <option value="units">Units</option>
+                <option value="cartons">Cartons</option>
+              </select>
+            </div> */}
             <div>
               <label className="text-base">Manufacturer</label>
               <input
                 type="text"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
-                placeholder="Item Manufacturer"
+                placeholder="Input Brand Name"
                 name="manufacturer"
                 value={manufacturer}
                 onChange={handleChange}
               />
-            </div>
-            <div>
-              <label className="text-base">Category</label>
-              <div className="w-full border border-[#CFCBCB] p-3 my-2">
-                {/* {editProduct.category.name} */} Category Name
-              </div>
-            </div>
-            <div>
-              <label className="text-base">Change Category</label>
-              <Categories onForm={handleCategoryInfo} />
             </div>
             <div>
               <label className="text-base">Price</label>
@@ -386,13 +471,33 @@ const EditProduct = () => {
                 onChange={handleChange}
               ></textarea>
             </div>
+            <div>
+              <label className="text-base">Maximum Order per carton</label>
+              <input
+                type="text"
+                className="w-full border border-[#CFCBCB] p-3 my-2"
+                placeholder="Input Value"
+                name="maximumOrderPerCarton"
+                value={maximumOrderPerCarton}
+                onChange={handleChange}
+              />
+            </div>
           </div>
         </div>
-        <div className="w-full flex items-center justify-end my-10">
+        <div className="w-full flex items-center justify-between my-10">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              // Add your logic to save as draft here
+            }}
+            className="w-[168px] md:w-[221px] h-[46px] border border-[#CFCBCB] bg-white font-primarySemibold text-black rounded-md"
+          >
+            Save as draft
+          </button>
           <button
             type="submit"
             // onClick={() => setPreview(true)}
-            className="w-[221px] h-[46px] bg-white rounded-md border border-[#359E52] text-[#359E52] flex items-center justify-center"
+            className="w-[168px] md:w-[221px] h-[46px] bg-white rounded-md border border-[#359E52] text-[#359E52] flex items-center justify-center"
             disabled={loading}
           >
             {loading ? (
@@ -417,7 +522,7 @@ const EditProduct = () => {
                 ></path>
               </svg>
             ) : (
-              "Update Product"
+              "Publish"
             )}
           </button>
         </div>
@@ -426,4 +531,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default AddWholesaleProduct;

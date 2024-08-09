@@ -23,6 +23,8 @@ const Myproducts = () => {
   const [showDelete, setDelete] = useState(false);
   const [FilteredProducts, setFilteredProducts] = useState([]);
   const [showQuantityPopup, setShowQuantityPopup] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
   const CustomSlider = ({ settings, images }) => {
     return (
@@ -133,6 +135,16 @@ const Myproducts = () => {
     setSelectedProduct(null);
   };
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(productsData.length / itemsPerPage);
+
+  const paginatedTable = productsData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   return (
     <>
       {showDelete && (
@@ -256,10 +268,7 @@ const Myproducts = () => {
                 <div className="flex items-center justify-between mt-10 font-primaryRegular">
                   <div className="flex flex-row gap-[10px]">
                     <button
-                      onClick={() => {
-                        setPreview(false);
-                        pushEdit(selectedProduct.id);
-                      }}
+                      onClick={() => handleEditProduct(selectedProduct)}
                       className="md:w-[150px] w-20 h-10 bg-[#4CBD6B] text-white rounded-[6px]"
                     >
                       Edit
@@ -391,7 +400,7 @@ const Myproducts = () => {
                 <tr>
                   {/* <th className="text-center p-4">ID</th> */}
                   <th className="text-left p-4">Product Name</th>
-                  <th className="text-center p-4">SKU</th>
+                  <th className="text-center p-4">Product Type</th>
                   <th className="text-center p-4">Price</th>
                   <th className="text-center p-4">Stock</th>
                   <th className="text-center p-4">Status</th>
@@ -399,7 +408,7 @@ const Myproducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {productsData.map((data, index) => {
+                {paginatedTable.map((data, index) => {
                   const { bgColor, textColor, dotColor } = getStatusStyles(
                     data.status
                   );
@@ -418,14 +427,17 @@ const Myproducts = () => {
                             className="rounded-full"
                           />
                           <div className="w-[100px] flex flex-col gap-2">
-                            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                            {/* <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                              {data.name}
+                            </p> */}
+                            <p className="text-ellipsis whitespace-nowrap">
                               {data.name}
                             </p>
                             <b>{data?.category?.name}</b>
                           </div>
                         </div>
                       </td>
-                      <td className="p-4 text-center">{data.sku}</td>
+                      <td className="p-4 text-center">{data.productType}</td>
                       <td className="p-4 text-center">
                         {data.currency + " " + data.price}
                       </td>
@@ -499,6 +511,21 @@ const Myproducts = () => {
                 })}
               </tbody>
             </table>
+            <div className="flex justify-end mt-4 mb-2 font-primaryMedium">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`w-8 rounded mx-1 p-2 ${
+                    currentPage === index + 1
+                      ? "bg-[#359E52] text-white"
+                      : "bg-gray-200 text-black"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

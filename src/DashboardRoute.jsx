@@ -10,7 +10,7 @@ import TrackOrders from "./pages/Orders/trackOrders";
 import OrderDetails from "./pages/Orders/orderDetails";
 import MyProducts from "./pages/Inventory/myProducts";
 import BulkUpload from "./pages/Inventory/bulkProducts";
-import AddProduct from "./pages/Inventory/addProduct";
+import AddProduct from "./pages/Inventory/Add-Product/index";
 import EditProduct from "./pages/Inventory/editProduct";
 import DraftProducts from "./pages/Inventory/draftProducts";
 import Discount from "./pages/Inventory/discount";
