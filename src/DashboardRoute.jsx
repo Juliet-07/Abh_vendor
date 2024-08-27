@@ -15,6 +15,7 @@ import EditProduct from "./pages/Inventory/editProduct";
 import DraftProducts from "./pages/Inventory/draftProducts";
 import Discount from "./pages/Inventory/discount";
 import Help from "./pages/help";
+import Dropshippers from "./pages/dropshippers";
 
 const DashboardRoute = () => {
   return (
@@ -23,6 +24,7 @@ const DashboardRoute = () => {
         <Routes>
           <Route path="/home" element={<Dashboard />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/dropshippers" element={<Dropshippers />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/help" element={<Help />} />

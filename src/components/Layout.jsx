@@ -8,6 +8,7 @@ import DashboardIcon from "../assets/dashboard.svg";
 import OrdersIcon from "../assets/orders.svg";
 import InventoryIcon from "../assets/inventory.svg";
 import AnalyticsIcon from "../assets/analytics.svg";
+import { TfiPackage } from "react-icons/tfi";
 
 const Layout = ({ children }) => {
   const [submenuOpen, setSubmenuOpen] = useState({});
@@ -23,6 +24,16 @@ const Layout = ({ children }) => {
       path: "/dashboard/home",
     },
     {
+      title: "Inventory",
+      icon: <img src={InventoryIcon} />,
+      submenu: true,
+      submenuItems: [
+        { title: "My Products", path: "/dashboard/myProducts" },
+        // { title: "Draft Products", path: "/dashboard/draftProducts" },
+        // { title: "Discount", path: "/dashboard/discountProducts" },
+      ],
+    },
+    {
       title: "Orders",
       icon: <img src={OrdersIcon} />,
       submenu: true,
@@ -32,14 +43,9 @@ const Layout = ({ children }) => {
       ],
     },
     {
-      title: "Inventory",
-      icon: <img src={InventoryIcon} />,
-      submenu: true,
-      submenuItems: [
-        { title: "My Products", path: "/dashboard/myProducts" },
-        { title: "Draft Products", path: "/dashboard/draftProducts" },
-        // { title: "Discount", path: "/dashboard/discountProducts" },
-      ],
+      title: "Dropshippers",
+      icon: <TfiPackage />,
+      path: "/dashboard/dropshippers",
     },
     {
       title: "Analytics",

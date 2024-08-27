@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import Dropdown from "../components/Dropdown";
 import {
@@ -13,8 +14,19 @@ import OrdersIcon from "../assets/orders_icon.svg";
 import SalesIcon from "../assets/sales_icon.svg";
 import UpArrow from "../assets/uparrow.svg";
 import Apple from "../assets/apple.png";
+import moment from "moment";
 
 const Dashboard = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("vendorToken");
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const formatDate = (dateString) => {
+    return moment(dateString).format("MMMM DD, YYYY");
+  };
+
   const productsData = [
     {
       id: "1565132",
@@ -128,6 +140,42 @@ const Dashboard = () => {
     console.log(FilteredProducts);
     console.log(filterKeyword);
   };
+
+  useEffect(() => {
+    const getPendingOrders = () => {
+      axios
+        .get(`${apiURL}/orders/vendor/me?filter.status=PENDING`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response.data.data.data);
+          setRecentOrders(response.data.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+
+    getPendingOrders();
+  }, []);
+
+  const extractFiveDigits = (id) => {
+    return id.substring(0, 5); // Extract the first 5 characters
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(recentOrders.length / itemsPerPage);
+
+  const paginatedProducts = recentOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   return (
     <>
       <div className="w-full font-primaryRegular bg-red-00 overflow-y-scroll">
@@ -167,7 +215,7 @@ const Dashboard = () => {
             </div>
             <div className=" w-full flex flex-row items-center justify-between">
               <div className="flex flex-row  gap-[10px]">
-                <b className="text-[18px]">2</b>
+                <b className="text-[18px]">{recentOrders.length}</b>
                 <p className="text-[16px]">Pending</p>
               </div>
 
@@ -355,7 +403,7 @@ const Dashboard = () => {
               </Link>
             </div>
 
-            <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] hidden md:flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">
+            {/* <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] hidden md:flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">
               <input
                 type="text"
                 className="w-full  bg-none border-none h-[35px] outline-none  placeholder:text-xs placeholder:text-[#37343566]"
@@ -366,69 +414,87 @@ const Dashboard = () => {
                 }}
               />
               <FiSearch width={16} height={16} color="#37343566" />
-            </div>
+            </div> */}
           </div>
-          <div className="w-full h-[40px] mt-[10px] md:hidden bg-white p-[10px] flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">
+          {/* <div className="w-full h-[40px] mt-[10px] md:hidden bg-white p-[10px] flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">
             <input
               type="text"
               className="w-full  bg-none border-none h-[35px] outline-none  placeholder:text-xs placeholder:text-[#37343566]"
               placeholder="Search for products"
             />
             <FiSearch width={16} height={16} color="#37343566" />
-          </div>
+          </div> */}
 
           <div className="w-[350px] md:w-full min-h-[300px] overflow-x-scroll">
             <div className="flex flex-row items-center gap-4">
               <div className=" h-[56px] mt-[10px] p-[10px] flex flex-1 flex-row items-center md:justify-between bg-[#F1F4F2] border-[#C1C6C5]">
-                <b className="text-sm text-black  min-w-[164px] text-center">
+                <b className="text-sm text-black  min-w-[150px] text-center">
                   Order ID
                 </b>
-                <b className="text-sm text-black  min-w-[164px] text-center">
+                <b className="text-sm text-black  min-w-[150px] text-center">
                   Date
                 </b>
-                <b className="text-sm text-black  min-w-[164px] text-center">
+                <b className="text-sm text-black  min-w-[150px] text-center">
                   Customer name
                 </b>
-                <b className="text-sm text-black  min-w-[164px] text-center">
+                <b className="text-sm text-black  min-w-[150px] text-center">
                   Address
                 </b>
-                <b className="text-sm text-black  min-w-[164px] text-center">
+                <b className="text-sm text-black  min-w-[150px] text-center">
                   Order status
                 </b>
-                <b className="text-sm text-black  min-w-[164px] text-center">
+                <b className="text-sm text-black  min-w-[150px] text-center">
                   Items
                 </b>
               </div>
             </div>
-            {[filterKeyword ? FilteredProducts : productsData][0].map(
-              (data, index) => {
-                return (
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="h-[56px] px-[10px] flex flex-1 flex-row items-center justify-between border-[#C1C6C5] border-[0.66px] mt-[10px]">
-                      <p className="text-sm text-black min-w-[164px] text-center">
-                        120381
-                      </p>
-                      <p className="text-xs text-black min-w-[164px] text-center">
-                        {data.date}
-                      </p>
-                      <p className="text-xs text-black min-w-[164px] text-center">
-                        {data.name}
-                      </p>
-                      <p className="text-xs text-black min-w-[164px] text-center">
-                        {data.address}
-                      </p>
-                      <div className="text-sm text-black min-w-[164px] flex flex-row justify-center items-center gap-[10px]">
-                        <div className="w-[8px] h-[8px] bg-[#08932E] rounded-[100px]" />
-                        <p className="text-xs">{data.order_status}</p>
-                      </div>
-                      <p className="text-xs text-black min-w-[164px] text-center">
-                        10
-                      </p>
+            {/* {[filterKeyword ? FilteredProducts : productsData][0].map( */}
+            {paginatedProducts.map((data, index) => {
+              return (
+                <div className="flex flex-row items-center gap-4">
+                  <div className="h-[56px] px-[10px] flex flex-1 flex-row items-center justify-between border-[#C1C6C5] border-[0.66px] mt-[10px]">
+                    <p className="text-sm text-black min-w-[150px] text-center">
+                      {extractFiveDigits(data._id)}
+                    </p>
+                    <p className="text-xs text-black min-w-[150px] text-center">
+                      {formatDate(data.created_at)}
+                    </p>
+                    <p className="text-xs text-black min-w-[150px] text-center">
+                      {data.userId.firstName + " " + data.userId.lastName}
+                    </p>
+                    <p className="text-xs text-black min-w-[150px] text-center">
+                      {data.shippingAddress.street +
+                        " " +
+                        data.shippingAddress.city +
+                        " " +
+                        data.shippingAddress.state}
+                    </p>
+                    <div className="text-sm text-black min-w-[150px] flex flex-row justify-center items-center gap-[10px]">
+                      <div className="w-[8px] h-[8px] bg-[#E3140F] rounded-[100px]" />
+                      <p className="text-xs">{data.order_status} Pending</p>
                     </div>
+                    <p className="text-xs text-black min-w-[150px] text-center">
+                      {data.products.length}
+                    </p>
                   </div>
-                );
-              }
-            )}
+                </div>
+              );
+            })}
+            <div className="flex justify-end mt-4 mb-2 font-primaryMedium">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`w-8 rounded mx-1 p-2 ${
+                    currentPage === index + 1
+                      ? "bg-[#359E52] text-white"
+                      : "bg-gray-200 text-black"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

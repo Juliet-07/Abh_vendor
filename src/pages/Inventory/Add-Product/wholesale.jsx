@@ -74,8 +74,13 @@ const AddWholesaleProduct = () => {
     }
   };
 
+  // const handleFootSizeChange = (e) => {
+  //   setFootSize(e.target.value);
+  // };
+
   const handleFootSizeChange = (e) => {
-    setFootSize(e.target.value);
+    const selectedFootSize = e.target.value;
+    setFootSize(selectedFootSize);
   };
 
   const handleUnitChange = (e) => {
@@ -162,10 +167,14 @@ const AddWholesaleProduct = () => {
     setLoading(true);
     const url = `${apiURL}/products/wholesale`;
     const formData = new FormData();
+    let finalSize = selectSize;
+    if (selectSize === "foot" && footSize) {
+      finalSize = `${selectSize}-${footSize}`;
+    }
     formData.append("name", name);
     formData.append("quantity", quantity);
-    formData.append("size", selectSize);
-    formData.append("unit", "unit");
+    formData.append("size", finalSize);
+    formData.append("unitPerCaton", unitPerCaton);
     formData.append("categoryId", categoryId);
     formData.append("subCategoryId", subCategoryId);
     formData.append("description", description);
@@ -173,7 +182,6 @@ const AddWholesaleProduct = () => {
     formData.append("currency", "NGN");
     formData.append("manufacturer", manufacturer);
     formData.append("maximumOrderPerCarton", maximumOrderPerCarton);
-    formData.append("unitPerCarton", unitPerCaton);
     galleryFiles.forEach((image) => {
       formData.append("product_images", image);
     });
@@ -182,6 +190,7 @@ const AddWholesaleProduct = () => {
     // colors.forEach((color) => {
     //   formData.append("color", colors);
     // });
+    console.log(formData, "data from form");
     setTimeout(() => {
       setLoading(false);
       axios
@@ -200,7 +209,7 @@ const AddWholesaleProduct = () => {
             setImages([]);
             setGalleryFiles([]);
             setColor("");
-            setCategoryId("")
+            setCategoryId("");
           }
         });
     }, 2000);
@@ -375,7 +384,7 @@ const AddWholesaleProduct = () => {
             <div>
               <label className="text-base">Units per carton</label>
               <input
-                type="number"
+                type="text"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
                 placeholder="Number of item"
                 name="unitPerCaton"
@@ -455,7 +464,7 @@ const AddWholesaleProduct = () => {
               <input
                 type="number"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
-                placeholder="Price per item"
+                placeholder="Input price per carton"
                 name="price"
                 value={price}
                 onChange={handleChange}
@@ -485,7 +494,8 @@ const AddWholesaleProduct = () => {
           </div>
         </div>
         <div className="w-full flex items-center justify-between my-10">
-          <button
+          <div></div>
+          {/* <button
             onClick={(e) => {
               e.preventDefault();
               // Add your logic to save as draft here
@@ -493,7 +503,7 @@ const AddWholesaleProduct = () => {
             className="w-[168px] md:w-[221px] h-[46px] border border-[#CFCBCB] bg-white font-primarySemibold text-black rounded-md"
           >
             Save as draft
-          </button>
+          </button> */}
           <button
             type="submit"
             // onClick={() => setPreview(true)}

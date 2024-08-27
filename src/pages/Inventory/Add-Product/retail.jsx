@@ -19,6 +19,7 @@ const AddRetailProduct = () => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [categoryId, setCategoryId] = useState("");
+  const [subCategoryId, setSubCategoryId] = useState("");
   const [selectSize, setSize] = useState("");
   const [footSize, setFootSize] = useState("");
   const [showFootSizes, setShowFootSizes] = useState(false);
@@ -75,9 +76,14 @@ const AddRetailProduct = () => {
     setUnit(value);
   };
 
-  const handleCategoryInfo = useCallback((data) => {
-    console.log({ data });
-    setCategoryId(data.value);
+  const handleCategoryInfo = useCallback((data, type) => {
+    console.log({ data, type });
+    if (type === "category") {
+      setCategoryId(data.value);
+      console.log(categoryId, "category id check");
+    } else if (type === "subcategory") {
+      setSubCategoryId(data.value);
+    }
   }, []);
 
   const handleImageUpload = (e) => {
@@ -121,13 +127,18 @@ const AddRetailProduct = () => {
 
   const addProduct = () => {
     setLoading(true);
-    const url = `${apiURL}/products`;
+    const url = `${apiURL}/products/retail`;
     const formData = new FormData();
+    let finalSize = selectSize;
+    if (selectSize === "foot" && footSize) {
+      finalSize = `${selectSize}-${footSize}`;
+    }
     formData.append("name", name);
     formData.append("quantity", quantity);
-    formData.append("size", selectSize);
-    formData.append("unit", selectUnit);
+    formData.append("size", finalSize);
+    // formData.append("unit", selectUnit);
     formData.append("categoryId", categoryId);
+    formData.append("subcategoryId", subCategoryId);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("currency", "NGN");
@@ -278,10 +289,6 @@ const AddRetailProduct = () => {
               <label className="text-base">Category</label>
               <Categories onForm={handleCategoryInfo} />
             </div>
-            <div className="mb-4">
-              <label className="text-base">Sub Category</label>
-              <Categories onForm={handleCategoryInfo} />
-            </div>
             <div>
               <label className="text-base">Quantity (in units)</label>
               <input
@@ -384,7 +391,8 @@ const AddRetailProduct = () => {
           </div>
         </div>
         <div className="w-full flex items-center justify-between my-10">
-          <button
+          <div></div>
+          {/* <button
             onClick={(e) => {
               e.preventDefault();
               // Add your logic to save as draft here
@@ -392,7 +400,7 @@ const AddRetailProduct = () => {
             className="w-[168px] md:w-[221px] h-[46px] border border-[#CFCBCB] bg-white font-primarySemibold text-black rounded-md"
           >
             Save as draft
-          </button>
+          </button> */}
           <button
             type="submit"
             // onClick={() => setPreview(true)}

@@ -25,20 +25,36 @@ const Myproducts = () => {
   const [showQuantityPopup, setShowQuantityPopup] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
+  const [loading, setLoading] = useState(false);
+
+  // const CustomSlider = ({ settings, images }) => {
+  //   return (
+  //     <div className="slider-container p-[20px] bg-none">
+  //       <Slider {...settings}>
+  //         {images.map((image, index) => (
+  //           <div
+  //             key={index}
+  //             className="max-w-[73px] border min-h-[55px] bg-contain mr-5"
+  //             style={{
+  //               background: `url(${image?.url}) center no-repeat`,
+  //               backgroundSize: "cover",
+  //             }}
+  //           ></div>
+  //         ))}
+  //       </Slider>
+  //     </div>
+  //   );
+  // };
+
 
   const CustomSlider = ({ settings, images }) => {
     return (
       <div className="slider-container p-[20px] bg-none">
         <Slider {...settings}>
           {images.map((image, index) => (
-            <div
-              key={index}
-              className="max-w-[73px] border min-h-[55px] bg-contain mr-5"
-              style={{
-                background: `url(${image}) center no-repeat`,
-                backgroundSize: "cover",
-              }}
-            ></div>
+            <div key={index} className="flex gap-4">
+              <img src={image.url} className="w-[100px] h-[100px]" />
+            </div>
           ))}
         </Slider>
       </div>
@@ -91,27 +107,6 @@ const Myproducts = () => {
     }
   };
 
-  useEffect(() => {
-    const getAllProducts = () => {
-      axios
-        .get(`${apiURL}/products`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        })
-        .then((response) => {
-          console.log(response.data.data.data);
-          setProductsData(response.data.data.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching vendors:", error);
-        });
-    };
-
-    getAllProducts();
-  }, []);
-
   const handleViewMore = (data) => {
     setSelectedProduct(data);
     setPreview(true);
@@ -130,6 +125,31 @@ const Myproducts = () => {
     }
   };
 
+  const handleDeleteProduct = (productId) => {
+    setLoading(true);
+    axios
+      .delete(`${apiURL}/products/delete/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      .then(() => {
+        const updatedProducts = productsData.filter(
+          (product) => product._id !== productId
+        );
+        setProductsData(updatedProducts);
+        toast.success("Prodcut deleted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error deleting product:", error);
+        toast.error("Failed to delete product.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const closeQuantityPopup = () => {
     setShowQuantityPopup(false);
     setSelectedProduct(null);
@@ -145,6 +165,27 @@ const Myproducts = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  useEffect(() => {
+    const getAllProducts = () => {
+      axios
+        .get(`${apiURL}/products/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setProductsData(response.data.data.products);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+
+    getAllProducts();
+  }, []);
   return (
     <>
       {showDelete && (
@@ -494,7 +535,7 @@ const Myproducts = () => {
                             <img src={ViewEye} alt="" width={15} height={15} />
                           </div>
                           <div
-                            onClick={() => setDelete(true)}
+                            onClick={() => handleDeleteProduct(data._id)}
                             className="w-[28px] h-[28px] border-[1px] cursor-pointer active:opacity-[0.2] rounded-full flex items-center justify-center"
                           >
                             <img

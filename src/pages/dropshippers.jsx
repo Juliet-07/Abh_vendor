@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AllOrders = () => {
+const Dropshippers = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const token = localStorage.getItem("vendorToken");
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState("New");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 6;
   const [allOrders, setAllOrders] = useState([]);
 
   const orders = [
@@ -106,96 +106,6 @@ const AllOrders = () => {
       price: "$230",
       order_status: "Processing",
     },
-    {
-      id: "1565132",
-      name: "Michael Farasin",
-      date: "Jan 2, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Pending",
-    },
-    {
-      id: "1565132",
-      name: "Prince Farasin",
-      date: "Feb 3, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Tom Cat",
-      date: "Mar 2, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Pending",
-      price: "$230",
-      order_status: "Pending",
-    },
-    {
-      id: "1565132",
-      name: "Victor bryte",
-      date: "Aug 2, 2024",
-      address: "37, ktu, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Anony Mous",
-      date: "MAy 4, 2024",
-      address: "84, subway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Shipped",
-    },
-    {
-      id: "1565132",
-      name: "John Smith",
-      date: "Aug 2, 2024",
-      address: "7, subway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Returned",
-    },
-    {
-      id: "1565132",
-      name: "Moses Micheal",
-      date: "Aug 2, 2024",
-      address: "7, yaba, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Ready To Ship",
-    },
-    {
-      id: "1565132",
-      name: "David King",
-      date: "Aug 2, 2024",
-      address: "22, Banksway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Delivered",
-    },
-    {
-      id: "1565132",
-      name: "Tim Codes",
-      date: "Aug 2, 2024",
-      address: "27, Timsway, Ontario, CA",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Delivered",
-    },
   ];
 
   useEffect(() => {
@@ -220,7 +130,7 @@ const AllOrders = () => {
   }, []);
 
   const filteredOrders = orders.filter((order) => {
-    if (activeTab === "All") return true;
+    if (activeTab === "New") return true;
     return order.order_status === activeTab;
   });
 
@@ -267,7 +177,7 @@ const AllOrders = () => {
         };
       case "shipped":
         return {
-          dotsColor: "bg-[#9747FF]",
+          dotsColor: "bg-[#08932E]",
         };
       case "ready to ship":
         return {
@@ -276,14 +186,6 @@ const AllOrders = () => {
       case "processing":
         return {
           dotsColor: "bg-[#081E93]",
-        };
-      case "delivered":
-        return {
-          dotsColor: "bg-[#08932E]",
-        };
-      case "returned":
-        return {
-          dotsColor: "bg-[#DFE30F]",
         };
       default:
         return {
@@ -314,15 +216,7 @@ const AllOrders = () => {
     }
   };
 
-  const tabs = [
-    "All",
-    "Pending",
-    "Processing",
-    "Ready To Ship",
-    "Shipped",
-    "Delivered",
-    "Returned",
-  ];
+  const tabs = ["New", "All", "Order Progress"];
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -330,7 +224,7 @@ const AllOrders = () => {
 
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
 
-  const paginatedOrders = filteredOrders.slice(
+  const paginatedProducts = filteredOrders.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -353,7 +247,7 @@ const AllOrders = () => {
 
       <>
         <div className="w-full flex flex-col">
-          <p className="w-full font-primaryBold">All Orders</p>
+          <p className="w-full font-primaryBold md:hidden">All Orders</p>
           {/* <div className="w-full md:max-w-[534px] h-10 bg-white p-3 flex items-center rounded-md">
             <input
               type="text"
@@ -378,10 +272,7 @@ const AllOrders = () => {
                       ? "bg-[#359E52] text-white"
                       : "bg-gray-200 text-sm"
                   }`}
-                  onClick={() => {
-                    setActiveTab(tab);
-                    setCurrentPage(1);
-                  }}
+                  onClick={() => setActiveTab(tab)}
                 >
                   {tab}
                 </button>
@@ -389,24 +280,23 @@ const AllOrders = () => {
             </div>
           </div>
 
-          {paginatedOrders.length > 0 ? (
+          {paginatedProducts.length > 0 ? (
             <div className="w-full bg-white p-3">
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white font-primaryRegular">
                   <thead className="bg-[#F1F4F2] font-primaryBold text-sm">
                     <tr>
-                      <th className="text-center p-3">Order ID</th>
                       <th className="text-center p-3">Date</th>
-                      <th className="text-center p-3">Customer Name</th>
-                      <th className="text-center p-3">Address</th>
-                      <th className="text-center p-3">Payment Status</th>
+                      <th className="text-center p-3">Product</th>
+                      <th className="text-center p-3">Payment Option</th>
+                      <th className="text-center p-3"> Status</th>
                       <th className="text-center p-3">Order Status</th>
                       <th className="text-center p-3">Items</th>
                       <th className="text-center p-3"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedOrders.map((order, index) => {
+                    {filteredOrders.map((order, index) => {
                       const { dotsColor } = getOrderStatusStyles(
                         order.order_status
                       );
@@ -490,4 +380,4 @@ const AllOrders = () => {
   );
 };
 
-export default AllOrders;
+export default Dropshippers;

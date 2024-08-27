@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Dropdown from "../components/Dropdown";
 import { RevenueChart, TotalOrdersChart } from "../components/Charts";
 import { FiSearch } from "react-icons/fi";
@@ -8,6 +9,51 @@ import OrdersIcon from "../assets/orders_icon.svg";
 import Cart from "../assets/cart.svg";
 
 const Analytics = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("vendorToken");
+  const [orders, setOrders] = useState([]);
+  const [myProducts, setMyProducts] = useState([]);
+
+  
+  useEffect(() => {
+    const getAllProducts = () => {
+      axios
+        .get(`${apiURL}/products/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          // console.log(response);
+          setMyProducts(response.data.data.products);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+
+    const getAllOrders = () => {
+      axios
+        .get(`${apiURL}/orders/vendor/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          // console.log(response.data.data.data);
+          setOrders(response.data.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+
+    getAllOrders();
+
+    getAllProducts();
+  }, []);
   return (
     <>
       <div className="w-full font-primaryRegular bg-red-00 overflow-y-scroll">
@@ -44,7 +90,7 @@ const Analytics = () => {
             <div className=" w-full flex flex-row items-center justify-center">
               <div className=" w-[80%] flex flex-row items-center justify-between">
                 <div className="flex flex-row  gap-[10px]">
-                  <b className="text-[18px]">12</b>
+                  <b className="text-[18px]">{orders.length}</b>
                 </div>
 
                 <button className="w-[73px] h-[31px] bg-none text-[#0F9E36] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">
@@ -65,7 +111,7 @@ const Analytics = () => {
             <div className=" w-full flex flex-row items-center justify-center">
               <div className=" w-[80%] flex flex-row items-center justify-between">
                 <div className="flex flex-row  gap-[10px]">
-                  <b className="text-[18px]">12</b>
+                  <b className="text-[18px]">{myProducts.length}</b>
                 </div>
 
                 <button className="w-[73px] h-[31px] bg-none text-[#0F9E36] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">

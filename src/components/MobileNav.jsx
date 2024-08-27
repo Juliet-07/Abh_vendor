@@ -16,6 +16,7 @@ import {
 } from "@headlessui/react";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaBell } from "react-icons/fa";
+import { TfiPackage } from "react-icons/tfi";
 
 const MobileNavigation = () => {
   const [nav, setNav] = useState(false);
@@ -35,6 +36,16 @@ const MobileNavigation = () => {
       path: "/dashboard/home",
     },
     {
+      title: "Inventory",
+      icon: <img src={InventoryIcon} />,
+      submenu: true,
+      submenuItems: [
+        { title: "My Products", path: "/dashboard/myProducts" },
+        // { title: "Draft Products", path: "/dashboard/draftProducts" },
+        // { title: "Discount", path: "/dashboard/discountProducts" },
+      ],
+    },
+    {
       title: "Orders",
       icon: <img src={OrdersIcon} />,
       submenu: true,
@@ -44,24 +55,14 @@ const MobileNavigation = () => {
       ],
     },
     {
-      title: "Inventory",
-      icon: <img src={InventoryIcon} />,
-      submenu: true,
-      submenuItems: [
-        { title: "My Products", path: "/dashboard/myProducts" },
-        { title: "Draft Products", path: "/dashboard/draftProducts" },
-        // { title: "Discount", path: "/dashboard/discountProducts" },
-      ],
+      title: "Dropshippers",
+      icon: <TfiPackage />,
+      path: "/dashboard/dropshippers",
     },
     {
       title: "Analytics",
       icon: <img src={AnalyticsIcon} />,
       path: "/dashboard/analytics",
-    },
-    {
-      title: "Notifications",
-      icon: <FaBell />,
-      path: "/dashboard/notifications",
     },
   ];
 
