@@ -295,7 +295,7 @@ const Dashboard = () => {
             <RevenueChart />
           </div>
         </div>
-
+        {/* Top Products Sold */}
         <div className="w-full flex flex-row flex-wrap justify-between mt-10">
           <div className="md:w-[50%] w-full h-[411px] flex flex-col bg-white rounded-xl p-4">
             <Dropdown
@@ -319,7 +319,7 @@ const Dashboard = () => {
             <OrderStatusChart />
           </div>
 
-          <div className="md:w-[42.5%] w-full  h-[411px] overflow-y-scroll bg-white rounded-xl p-4 mt-10 gap-10 md:mt-0">
+          <div className="md:w-[42.5%] w-full  h-[411px] overflow-y-scroll bg-white rounded-xl p-4 mt-10 gap-10 md:mt-0 no-scrollbar">
             <Dropdown
               title={"TOP PRODUCTS SOLD"}
               data={[
@@ -372,7 +372,7 @@ const Dashboard = () => {
               },
             ].map((data, index) => {
               return (
-                <div className="w-full h-[68px] mt-[10px] flex flex-row items-center justify-between border-b-[1px] border-[#CFCBCB]">
+                <div className="w-full h-[68px] mt-[10px] flex flex-row items-center justify-between border-b-[1px] border-[#CFCBCB] no-scrollbar">
                   <div className="w-[60px] h-[60px] border border-[#CFCBCB] flex items-center justify-center p-1">
                     {data.img}
                   </div>
@@ -387,7 +387,6 @@ const Dashboard = () => {
             })}
           </div>
         </div>
-
         {/* Table */}
         <div className="w-full  min-h-[500px] bg-white rounded-md p-4 mt-10">
           <div className="w-full h-[56px] p-3 flex flex-row items-center justify-between border-[#C1C6C5] border-[0.66px]">

@@ -104,7 +104,7 @@ const EditProduct = () => {
 
   const addProduct = () => {
     setLoading(true);
-    const url = `${apiURL}/products`;
+    const url = `${apiURL}/products/update/${editProduct._id}`;
     const formData = new FormData();
     formData.append("name", name);
     formData.append("quantity", quantity);
@@ -122,7 +122,7 @@ const EditProduct = () => {
     setTimeout(() => {
       setLoading(false);
       axios
-        .post(url, formData, {
+        .patch(url, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -11,6 +11,8 @@ import "slick-carousel/slick/slick-theme.css";
 import EditPen from "../../assets/pencil.svg";
 import ViewEye from "../../assets/eye.svg";
 import DeleteCan from "../../assets/trash.svg";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Myproducts = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -26,26 +28,6 @@ const Myproducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const [loading, setLoading] = useState(false);
-
-  // const CustomSlider = ({ settings, images }) => {
-  //   return (
-  //     <div className="slider-container p-[20px] bg-none">
-  //       <Slider {...settings}>
-  //         {images.map((image, index) => (
-  //           <div
-  //             key={index}
-  //             className="max-w-[73px] border min-h-[55px] bg-contain mr-5"
-  //             style={{
-  //               background: `url(${image?.url}) center no-repeat`,
-  //               backgroundSize: "cover",
-  //             }}
-  //           ></div>
-  //         ))}
-  //       </Slider>
-  //     </div>
-  //   );
-  // };
-
 
   const CustomSlider = ({ settings, images }) => {
     return (
@@ -111,10 +93,6 @@ const Myproducts = () => {
     setSelectedProduct(data);
     setPreview(true);
   };
-  // const handleEditProduct = (data) => {
-  //   console.log("handleEditDetails called with:", data);
-  //   navigate("/dashboard/editProduct", { state: { data } });
-  // };
 
   const handleEditProduct = (data) => {
     if (data.status.toLowerCase() === "approved") {
@@ -123,6 +101,32 @@ const Myproducts = () => {
     } else {
       navigate("/dashboard/editProduct", { state: { data } });
     }
+  };
+
+  const handleUpdateProduct = () => {
+    setLoading(true);
+    const url = `${apiURL}/products/update/${selectedProduct._id}`;
+    const payload = {
+      quantity: selectedProduct.quantity,
+    };
+    axios
+      .patch(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      .then(() => {
+        toast.success("Product updated successfully!");
+        closeQuantityPopup(true);
+      })
+      .catch((error) => {
+        console.error("Error deleting product:", error);
+        toast.error("Failed to update product.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleDeleteProduct = (productId) => {
@@ -188,6 +192,7 @@ const Myproducts = () => {
   }, []);
   return (
     <>
+      <ToastContainer />
       {showDelete && (
         <div
           // onClick={()=> setPreview(false)}
@@ -271,23 +276,31 @@ const Myproducts = () => {
                     <br />
                     <br />
                     <b>{selectedProduct.name}</b>
-                    <p>{selectedProduct?.category?.name}</p>
+                    <p>{selectedProduct?.categoryId?.name}</p>
                     <br />
-                    <div className="flex flex-row gap-[10px]">
+                    {/* <div className="flex flex-row gap-[10px]">
                       <b>SKU</b> <p>{selectedProduct.sku}</p>
-                    </div>
-                    <br />
+                    </div> */}
+                    {/* <br /> */}
                     <p>{selectedProduct.description}</p>
                     <br />
-                    <b>
-                      {selectedProduct.currency + " " + selectedProduct.price}
-                    </b>
+                    <div className="flex flex-row gap-[10px]">
+                      <b>Price</b>
+                      <p>
+                        {selectedProduct.currency + " " + selectedProduct.price}
+                      </p>
+                    </div>
                     <br />
                     <div className="flex flex-row gap-[10px]">
                       <b>Quantity</b>
                       <p>
                         {selectedProduct.quantity + " " + selectedProduct.unit}
                       </p>
+                    </div>
+                    <br />
+                    <div className="flex flex-row gap-[10px]">
+                      <b>Size</b>
+                      <p>{selectedProduct.size}</p>
                     </div>
                     <br />
                     <div className="flex items-center gap-3">
@@ -352,19 +365,19 @@ const Myproducts = () => {
             />
             <b className="md:text-xl text-center">Edit Stock Level</b>
             <p className="py-2 text-xs md:text-base">
-              ID {selectedProduct.categoryId}
+              ID {selectedProduct?.categoryId?._id}
             </p>
             <div className="w-full flex flex-col md:flex-row items-center gap-4">
               <div className="w-[234px] h-[198px]">
                 <img
-                  src={selectedProduct.featured_image}
+                  src={selectedProduct?.featured_image}
                   // className="w-[234px] h-[198px]"
                 />
               </div>
               <div className="grid gap-3 md:gap-6 text-left">
                 <div>
-                  <b>{selectedProduct.name}</b>
-                  <p>{selectedProduct?.category?.name}</p>
+                  <b>{selectedProduct?.name}</b>
+                  <p>{selectedProduct?.categoryId?.name}</p>
                 </div>
 
                 <div>
@@ -388,10 +401,34 @@ const Myproducts = () => {
 
             <div className="w-full mt-6">
               <button
-                // onClick={closeQuantityPopup}
-                className="w-full h-[46px] rounded-lg bg-[#4CBD6B] text-white"
+                onClick={handleUpdateProduct}
+                className="w-full h-[46px] rounded-lg bg-[#4CBD6B] text-white flex items-center justify-center"
+                // disabled={loading}
               >
-                Update
+                {loading ? (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  "Update"
+                )}
               </button>
             </div>
           </div>
@@ -474,7 +511,7 @@ const Myproducts = () => {
                             <p className="text-ellipsis whitespace-nowrap">
                               {data.name}
                             </p>
-                            <b>{data?.category?.name}</b>
+                            <b>{data?.categoryId?.name}</b>
                           </div>
                         </div>
                       </td>

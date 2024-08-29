@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FiUploadCloud } from "react-icons/fi";
+import { ArrowNarrowLeftIcon, CheckIcon, XIcon } from "@heroicons/react/solid";
 import Categories from "../../../components/Categories";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +14,7 @@ const AddRetailProduct = () => {
   const token = localStorage.getItem("vendorToken");
   const navigate = useNavigate();
   const { handleSubmit } = useForm();
+  const [showPreview, setPreview] = useState(false);
   const [galleryFiles, setGalleryFiles] = useState([]);
   const [featuredImage, setFeaturedImage] = useState(null);
   const [featuredImageFile, setFeaturedImageFile] = useState(null);
@@ -24,6 +26,7 @@ const AddRetailProduct = () => {
   const [footSize, setFootSize] = useState("");
   const [showFootSizes, setShowFootSizes] = useState(false);
   const [selectUnit, setUnit] = useState("");
+  const [color, setColor] = useState("");
 
   const initialValue = {
     name: "",
@@ -86,6 +89,19 @@ const AddRetailProduct = () => {
     }
   }, []);
 
+  const handleColourInfo = useCallback((data) => {
+    // Check if selectedColors is an array and has items
+    // if (Array.isArray(selectedColors) && selectedColors.length > 0) {
+    //   const colorArray = selectedColors.map((color) => color.label);
+    //   setColors(colorArray);
+    //   console.log(colorArray, "selected colors");
+    // } else {
+    //   console.log("No colors selected");
+    // }
+    console.log({ data });
+    setColor(data.label);
+  }, []);
+
   const handleImageUpload = (e) => {
     console.log(e.target.files, "image");
     const file = e.target.files[0];
@@ -136,12 +152,13 @@ const AddRetailProduct = () => {
     formData.append("name", name);
     formData.append("quantity", quantity);
     formData.append("size", finalSize);
-    // formData.append("unit", selectUnit);
+    formData.append("unit", "units");
     formData.append("categoryId", categoryId);
     formData.append("subcategoryId", subCategoryId);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("currency", "NGN");
+    formData.append("color", color);
     formData.append("manufacturer", manufacturer);
     galleryFiles.forEach((image) => {
       formData.append("product_images", image);
@@ -164,12 +181,39 @@ const AddRetailProduct = () => {
             setFeaturedImageFile(null);
             setImages([]);
             setGalleryFiles([]);
+            setColor("");
+            setCategoryId("");
           }
         });
     }, 2000);
   };
   return (
     <>
+      <ToastContainer />
+      {showPreview && (
+        <div
+          // onClick={()=> setPreview(false)}
+          className="w-full h-[100vh]  bg-[#000000a8] z-[10000] fixed top-0 left-0 flex flex-col items-center justify-center font-primaryRegular"
+        >
+          <div className="w-[90%] max-w-[498px] h-[344px] bg-white rounded-lg flex flex-col items-center justify-center gap-3">
+            <div className="w-[50px] h-[50px] rounded-[100px] border-[#08932E] border flex flex-col items-center justify-center">
+              <CheckIcon width={30} height={30} color="#08932E" />
+            </div>
+            <b>Product received</b>
+            <p className="w-full text-center">
+              Your product has been received and <br />
+              is you will be notified once it is live
+            </p>
+            <br />
+            <button
+              onClick={() => setPreview(false)}
+              className="w-[150px] h-10 rounded-md bg-[#4CBD6B] text-white font-semibold"
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
       <form
         onSubmit={handleSubmit(addProduct)}
         className="w-full flex flex-col overflow-y-scroll my-4 md:my-6 font-primaryRegular"
@@ -341,7 +385,7 @@ const AddRetailProduct = () => {
             </div>
             <div className="mb-4">
               <label className="text-base">Color</label>
-              <ColorSelect />
+              <ColorSelect onForm={handleColourInfo} />
             </div>
             {/* <div>
             <label className="text-base">Unit</label>

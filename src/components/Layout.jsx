@@ -153,12 +153,12 @@ const Layout = ({ children }) => {
         {/* Desktop Content */}
         <div className="hidden md:block flex-1">
           <Navbar onToggleSidebar={handleToggleSidebar} />
-          <main className="flex-1 overflow-y-auto h-[calc(100vh-64px)] pt-20 p-5 md:p-4 bg-gray-100">
+          <main className="flex-1 overflow-y-auto h-[calc(100vh-64px)] pt-20 p-5 md:p-4 bg-gray-100 no-scrollbar">
             {children}
           </main>
         </div>
         {/* Mobile Content */}
-        <main className="flex-1 md:hidden overflow-y-auto h-[calc(100vh-64px)] pt-20 p-5 md:p-4 bg-gray-100">
+        <main className="flex-1 md:hidden overflow-y-auto h-[calc(100vh-64px)] pt-20 p-5 md:p-4 bg-gray-100 no-scrollbar">
           {children}
         </main>
       </div>

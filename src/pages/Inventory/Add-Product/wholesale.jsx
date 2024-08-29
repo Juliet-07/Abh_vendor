@@ -174,6 +174,7 @@ const AddWholesaleProduct = () => {
     formData.append("name", name);
     formData.append("quantity", quantity);
     formData.append("size", finalSize);
+    formData.append("unit", finalSize);
     formData.append("unitPerCaton", unitPerCaton);
     formData.append("categoryId", categoryId);
     formData.append("subCategoryId", subCategoryId);
