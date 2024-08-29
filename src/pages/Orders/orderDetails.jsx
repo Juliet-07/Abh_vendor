@@ -4,6 +4,7 @@ import { ArrowLeftIcon, DownloadIcon } from "@heroicons/react/outline";
 import { IoIosPerson } from "react-icons/io";
 import { TbTruckDelivery } from "react-icons/tb";
 import { XIcon } from "@heroicons/react/solid";
+import { FiPackage } from "react-icons/fi";
 
 const OrderDetails = () => {
   const location = useLocation();
@@ -17,57 +18,68 @@ const OrderDetails = () => {
   }
 
   const getOrderStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "bg-[#E3140F]"; // Red
-      case "processing":
-        return "bg-[#081E93]"; // Blue
-      case "ready to ship":
-        return "bg-[#FFA500]"; // Orange
-      case "shipped":
-        return "bg-[#08932E]"; // Green
-      case "delivered":
-        return "bg-[#0000FF]"; // Blue
-      case "returned":
-        return "bg-[#FFFF00]"; // Yellow
-      default:
-        return "bg-[#C1C6C5]"; // Default grey color
+    if (typeof status === "string") {
+      switch (status.toLowerCase()) {
+        case "pending":
+          return "bg-[#E3140F]"; // Red
+        case "processing":
+          return "bg-[#081E93]"; // Blue
+        case "ready to ship":
+          return "bg-[#FFA500]"; // Orange
+        case "shipped":
+          return "bg-[#08932E]"; // Green
+        case "delivered":
+          return "bg-[#0000FF]"; // Blue
+        case "returned":
+          return "bg-[#FFFF00]"; // Yellow
+        default:
+          return "bg-[#C1C6C5]"; // Default grey color
+      }
+    } else {
+      return "bg-gray-200";
     }
   };
 
   const getPaymentStatusStyles = (status) => {
-    switch (status.toLowerCase()) {
-      case "paid":
-        return {
-          bgColor: "bg-[#08932E]/[12%]",
-          textColor: "text-[#08932E]",
-          dotColor: "bg-[#08932E]",
-        };
-      case "pending":
-        return {
-          bgColor: "bg-[#E3140F]/[12%]",
-          textColor: "text-[#E3140F]",
-          dotColor: "bg-[#E3140F]",
-        };
-      default:
-        return {
-          bgColor: "bg-gray-200",
-          textColor: "text-gray-800",
-          dotColor: "bg-gray-800",
-        };
+    if (typeof status === "string") {
+      switch (status.toLowerCase()) {
+        case "paid":
+          return {
+            bgColor: "bg-[#08932E]/[12%]",
+            textColor: "text-[#08932E]",
+            dotColor: "bg-[#08932E]",
+          };
+        case "pending":
+          return {
+            bgColor: "bg-[#E3140F]/[12%]",
+            textColor: "text-[#E3140F]",
+            dotColor: "bg-[#E3140F]",
+          };
+        default:
+          return {
+            bgColor: "bg-gray-200",
+            textColor: "text-gray-800",
+            dotColor: "bg-gray-800",
+          };
+      }
+    } else {
+      return { bgColor: "bg-gray-200", textColor: "text-gray-800" };
     }
   };
 
   const showChangeStatusButton = () => {
-    const status = orderDetails.order_status.toLowerCase();
+    const status = orderDetails.deliveryStatus.toLowerCase();
     return status === "processing" || status === "ready to ship";
   };
 
   const showActionButtons = () => {
-    const status = orderDetails.order_status.toLowerCase();
+    const status = orderDetails.deliveryStatus.toLowerCase();
     return status === "pending";
   };
 
+  const extractFiveDigits = (id) => {
+    return id.substring(0, 5); // Extract the first 5 characters
+  };
   return (
     <>
       {changeStatusPreview && (
@@ -161,24 +173,24 @@ const OrderDetails = () => {
             <div className="w-full flex gap-10 border-b border-[#CFCBCB] p-4">
               <div className="flex flex-col items-center justify-center text-xs md:text-base">
                 <p className="font-primarySemibold">
-                  Order ID #{orderDetails.id}
+                  Order ID {extractFiveDigits(orderDetails._id)}
                 </p>
                 <p>{orderDetails.date}</p>
               </div>
-              <div className="flex flex-col items-center justify-center text-xs md:text-base">
+              {/* <div className="flex flex-col items-center justify-center text-xs md:text-base">
                 <p>Total price</p>
                 <p className="font-primarySemibold">{orderDetails.price}</p>
-              </div>
+              </div> */}
               <div className="flex flex-col items-center justify-center">
-                <p className="text-sm md:text-base">Order status</p>
+                <p className="text-sm md:text-base">Order Status</p>
                 <div className="flex gap-4 items-center justify-center">
                   <div
                     className={`w-2 h-2 rounded-[100px] ${getOrderStatusColor(
-                      orderDetails.order_status
+                      orderDetails.deliveryStatus
                     )}`}
                   />
-                  <p className="text-sm md:text-base font-primarySemibold">
-                    {orderDetails.order_status}
+                  <p className="text-sm font-primarySemibold">
+                    {orderDetails.deliveryStatus}
                   </p>
                 </div>
               </div>
@@ -208,32 +220,32 @@ const OrderDetails = () => {
               </div>
               <div className="flex flex-col items-start p-4">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 bg-[#373435] rounded-[100px]" />
+                  <div className="w-10 h-10 bg-[#373435] rounded-[100px] text-white flex items-center justify-center">
+                    <FiPackage size={20} />
+                  </div>
                   <b>Order Details</b>
                 </div>
                 <div className="grid gap-4">
                   <div className="flex gap-3 items-center">
                     <p className="text-sm font-primarySemibold">Payment:</p>
-                    {orderDetails.payment_status && (
+                    {orderDetails.status && (
                       <div
                         className={`min-w-[66px] h-[35px] p-3 flex items-center justify-center gap-3 ${
-                          getPaymentStatusStyles(orderDetails.payment_status)
-                            .bgColor
+                          getPaymentStatusStyles(orderDetails.status).bgColor
                         }`}
                       >
                         <div
                           className={`w-2 h-2 rounded-[100px] ${
-                            getPaymentStatusStyles(orderDetails.payment_status)
-                              .dotColor
+                            getPaymentStatusStyles(orderDetails.status).dotColor
                           }`}
                         />
                         <p
                           className={`${
-                            getPaymentStatusStyles(orderDetails.payment_status)
+                            getPaymentStatusStyles(orderDetails.status)
                               .textColor
                           } text-xs`}
                         >
-                          {orderDetails.payment_status}
+                          {orderDetails.status}
                         </p>
                       </div>
                     )}
@@ -254,35 +266,39 @@ const OrderDetails = () => {
                 <div className="grid gap-4">
                   <div className="flex gap-3 text-sm">
                     <p className="font-primarySemibold">City:</p>
-                    <p>Lagos</p>
+                    <p>{orderDetails.shippingAddress.city}</p>
                   </div>
                   <div className="flex gap-3 text-sm">
                     <p className="font-primarySemibold">State:</p>
-                    <p>New york</p>
+                    <p>{orderDetails.shippingAddress.state}</p>
                   </div>
                   <div className="flex gap-3 text-sm">
                     <p className="font-primarySemibold">Address:</p>
-                    <p>{orderDetails.address}</p>
+                    <p>{orderDetails.shippingAddress.street}</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="w-full flex items-center flex-wrap p-4 gap-4">
-              <div className="w-[175px] border border-[#CFCBCB] h-[120px] rounded-lg"></div>
-              <div className="flex items-center gap-10">
-                <div className="flex flex-col items-center">
-                  <b className="text-sm">Apples</b>
-                  <p className="text-xs">Grocery</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <b className="text-sm">QTY</b>
-                  <p className="text-xs">10</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <b className="text-sm">Total Price</b>
-                  <p className="text-xs">$230</p>
-                </div>
-              </div>
+              {orderDetails.products.map((product) => (
+                <>
+                  <div className="w-[175px] border border-[#CFCBCB] h-[120px] rounded-lg"></div>
+                  <div className="flex items-center gap-10">
+                    <div className="flex flex-col items-center">
+                      <b className="text-sm">Apples</b>
+                      <p className="text-xs">Grocery</p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <b className="text-sm">QTY</b>
+                      <p className="text-xs">{product.quantity}</p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <b className="text-sm">Total Price</b>
+                      <p className="text-xs">$230</p>
+                    </div>
+                  </div>
+                </>
+              ))}
             </div>
           </div>
           <div className="w-full flex flex-row items-center justify-end my-4 font-primaryRegular">

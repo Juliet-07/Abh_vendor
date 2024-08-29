@@ -201,15 +201,15 @@ const AllOrders = () => {
   useEffect(() => {
     const getAllOrders = () => {
       axios
-        .get(`${apiURL}/orders/vendor/me`, {
+        .get(`${apiURL}/vendors-dashboard/my-orders`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-type": "application/json; charset=UTF-8",
           },
         })
         .then((response) => {
-          console.log(response.data.data.data);
-          setAllOrders(response.data.data.data);
+          console.log(response.data.data.orders);
+          setAllOrders(response.data.data.orders);
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
@@ -219,9 +219,9 @@ const AllOrders = () => {
     getAllOrders();
   }, []);
 
-  const filteredOrders = orders.filter((order) => {
+  const filteredOrders = allOrders.filter((order) => {
     if (activeTab === "All") return true;
-    return order.order_status === activeTab;
+    return order.deliveryStatus?.toLowerCase() === activeTab.toLowerCase();
   });
 
   // const searchForProducts = (keyword) => {
@@ -259,58 +259,108 @@ const AllOrders = () => {
     navigate("/dashboard/orderDetails", { state: { data } });
   };
 
+  // const getOrderStatusStyles = (status) => {
+  //   switch (status.toLowerCase()) {
+  //     case "pending":
+  //       return {
+  //         dotsColor: "bg-[#E3140F]",
+  //       };
+  //     case "shipped":
+  //       return {
+  //         dotsColor: "bg-[#9747FF]",
+  //       };
+  //     case "ready to ship":
+  //       return {
+  //         dotsColor: "bg-[#FFA500]",
+  //       };
+  //     case "processing":
+  //       return {
+  //         dotsColor: "bg-[#081E93]",
+  //       };
+  //     case "delivered":
+  //       return {
+  //         dotsColor: "bg-[#08932E]",
+  //       };
+  //     case "returned":
+  //       return {
+  //         dotsColor: "bg-[#DFE30F]",
+  //       };
+  //     default:
+  //       return {
+  //         dotsColor: "bg-gray-200",
+  //       };
+  //   }
+  // };
+
+  // const getPaymentStatusStyles = (status) => {
+  //   switch (status.toLowerCase()) {
+  //     case "paid":
+  //       return {
+  //         bgColor: "bg-[#08932E]/[12%]",
+  //         textColor: "text-[#08932E]",
+  //         dotColor: "bg-[#08932E]",
+  //       };
+  //     case "pending":
+  //       return {
+  //         bgColor: "bg-[#E3140F]/[12%]",
+  //         textColor: "text-[#E3140F]",
+  //         dotColor: "bg-[#E3140F]",
+  //       };
+  //     default:
+  //       return {
+  //         bgColor: "bg-gray-200",
+  //         textColor: "text-gray-800",
+  //       };
+  //   }
+  // };
+
   const getOrderStatusStyles = (status) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return {
-          dotsColor: "bg-[#E3140F]",
-        };
-      case "shipped":
-        return {
-          dotsColor: "bg-[#9747FF]",
-        };
-      case "ready to ship":
-        return {
-          dotsColor: "bg-[#FFA500]",
-        };
-      case "processing":
-        return {
-          dotsColor: "bg-[#081E93]",
-        };
-      case "delivered":
-        return {
-          dotsColor: "bg-[#08932E]",
-        };
-      case "returned":
-        return {
-          dotsColor: "bg-[#DFE30F]",
-        };
-      default:
-        return {
-          dotsColor: "bg-gray-200",
-        };
+    // Check if status is defined and is a string
+    if (typeof status === "string") {
+      switch (status.toLowerCase()) {
+        case "pending":
+          return { dotsColor: "bg-[#E3140F]" };
+        case "shipped":
+          return { dotsColor: "bg-[#9747FF]" };
+        case "ready to ship":
+          return { dotsColor: "bg-[#FFA500]" };
+        case "processing":
+          return { dotsColor: "bg-[#081E93]" };
+        case "delivered":
+          return { dotsColor: "bg-[#08932E]" };
+        case "returned":
+          return { dotsColor: "bg-[#DFE30F]" };
+        default:
+          return { dotsColor: "bg-gray-200" };
+      }
+    } else {
+      // Fallback if status is undefined or not a string
+      return { dotsColor: "bg-gray-200" };
     }
   };
 
   const getPaymentStatusStyles = (status) => {
-    switch (status.toLowerCase()) {
-      case "paid":
-        return {
-          bgColor: "bg-[#08932E]/[12%]",
-          textColor: "text-[#08932E]",
-          dotColor: "bg-[#08932E]",
-        };
-      case "pending":
-        return {
-          bgColor: "bg-[#E3140F]/[12%]",
-          textColor: "text-[#E3140F]",
-          dotColor: "bg-[#E3140F]",
-        };
-      default:
-        return {
-          bgColor: "bg-gray-200",
-          textColor: "text-gray-800",
-        };
+    // Check if status is defined and is a string
+    if (typeof status === "string") {
+      switch (status.toLowerCase()) {
+        case "paid":
+          return {
+            bgColor: "bg-[#08932E]/[12%]",
+            textColor: "text-[#08932E]",
+            dotColor: "bg-[#08932E]",
+          };
+        case "pending":
+          return {
+            bgColor: "bg-[#E3140F]/[12%]",
+            textColor: "text-[#E3140F]",
+            dotColor: "bg-[#E3140F]",
+          };
+        default:
+          return { bgColor: "bg-gray-200", textColor: "text-gray-800" };
+      }
+    } else {
+      // Fallback if status is undefined or not a string
+      return { bgColor: "bg-gray-200", textColor: "text-gray-800" };
     }
   };
 
@@ -334,6 +384,10 @@ const AllOrders = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const extractFiveDigits = (id) => {
+    return id.substring(0, 5); // Extract the first 5 characters
+  };
   return (
     <>
       <ToastContainer
@@ -408,19 +462,29 @@ const AllOrders = () => {
                   <tbody>
                     {paginatedOrders.map((order, index) => {
                       const { dotsColor } = getOrderStatusStyles(
-                        order.order_status
+                        order.deliveryStatus
                       );
                       const { bgColor, textColor, dotColor } =
-                        getPaymentStatusStyles(order.payment_status);
+                        getPaymentStatusStyles(order.status);
                       return (
                         <tr
                           key={index}
                           className="border text-xs font-primaryMedium mb-4"
                         >
-                          <td className="p-4 text-center">120381</td>
-                          <td className="p-4 text-center">Jun 16, 2024</td>
+                          <td className="p-4 text-center">
+                            {extractFiveDigits(order._id)}
+                          </td>
+                          <td className="p-4 text-center">
+                            {order.created_at}
+                          </td>
                           <td className="p-4 text-center">{order.name}</td>
-                          <td className="p-4 text-center">{order.address}</td>
+                          <td className="p-4 text-center">
+                            {order.shippingAddress.street +
+                              " " +
+                              order.shippingAddress.city +
+                              " " +
+                              order.shippingAddress.state}
+                          </td>
                           <td className="p-4 text-center">
                             <div
                               className={`w-full h-10 ${bgColor} p-3 flex items-center justify-center gap-[10px]`}
@@ -429,7 +493,7 @@ const AllOrders = () => {
                                 className={`w-[8px] h-[8px] ${dotColor} rounded-[100px]`}
                               />
                               <p className={`${textColor} text-xs`}>
-                                {order.payment_status}
+                                {order.status}
                               </p>
                             </div>
                           </td>
@@ -440,10 +504,12 @@ const AllOrders = () => {
                               <div
                                 className={`w-[8px] h-[8px] ${dotsColor} rounded-[100px]`}
                               />
-                              <p className="text-xs">{order.order_status}</p>
+                              <p className="text-xs">{order.deliveryStatus}</p>
                             </div>
                           </td>
-                          <td className="p-4 text-center">10</td>
+                          <td className="p-4 text-center">
+                            {order?.products.length}
+                          </td>
                           <td className="p-4 text-center">
                             <button
                               onClick={() => handleOrderDetails(order)}

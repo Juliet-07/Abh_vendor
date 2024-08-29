@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [recentOrders, setRecentOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+  const [totalSales, setTotalSales] = useState(null);
 
   const formatDate = (dateString) => {
     return moment(dateString).format("MMMM DD, YYYY");
@@ -144,7 +145,7 @@ const Dashboard = () => {
   useEffect(() => {
     const getPendingOrders = () => {
       axios
-        .get(`${apiURL}/orders/vendor/me?filter.status=PENDING`, {
+        .get(`${apiURL}/vendors-dashboard/orders?status=PENDING`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-type": "application/json; charset=UTF-8",
@@ -158,7 +159,24 @@ const Dashboard = () => {
           console.error("Error fetching vendors:", error);
         });
     };
-
+    const getTotalSales = () => {
+      axios
+        .get(`${apiURL}/vendors-dashboard/total-sales`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          const formattedTotalSales = response.data.data.toLocaleString();
+          setTotalSales(formattedTotalSales);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+    getTotalSales();
     getPendingOrders();
   }, []);
 
@@ -238,7 +256,7 @@ const Dashboard = () => {
             </div>
             <div className=" w-full flex flex-row items-center justify-between">
               <div className="flex flex-row  gap-[10px]">
-                <b className="text-[18px]">$23,100</b>
+                <b className="text-[18px]">₦ {totalSales}</b>
               </div>
 
               <button className="w-[73px] h-[31px] bg-[#F0F0F0] text-[#0F9E36] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">
