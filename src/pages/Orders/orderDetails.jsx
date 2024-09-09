@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import { ArrowLeftIcon, DownloadIcon } from "@heroicons/react/outline";
 import { IoIosPerson } from "react-icons/io";
 import { TbTruckDelivery } from "react-icons/tb";
 import { XIcon } from "@heroicons/react/solid";
 import { FiPackage } from "react-icons/fi";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrderDetails = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("vendorToken");
   const location = useLocation();
   const orderDetails = location.state && location.state.data;
   console.log("detailing", orderDetails);
@@ -80,8 +85,44 @@ const OrderDetails = () => {
   const extractFiveDigits = (id) => {
     return id.substring(0, 5); // Extract the first 5 characters
   };
+
+  const manageOrderStatus = (orderId, status) => {
+    const url = `${apiURL}/orders/status/${orderId}`;
+    axios
+      .put(
+        url,
+        { deliveryStatus: status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Order status updated:", response.data);
+        toast.success("Order successfully accepted");
+      })
+      .catch((error) => {
+        console.error("Error updating order status:", error);
+        toast.error("Error updating order status");
+      });
+  };
+
+  const handleApprove = () => {
+    manageOrderStatus(orderDetails._id, "CONFIRMED");
+    // setPreview(false);
+    // setApproval(true);
+  };
+
+  const handleDecline = () => {
+    manageOrderStatus(orderDetails._id, "DECLINED");
+    // setPreview(false);
+    // setDecline(true);
+  };
   return (
     <>
+      <ToastContainer />
       {changeStatusPreview && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 font-primaryRegular">
           <div className="bg-white rounded-lg p-6 w-[90%] max-w-md ">
@@ -206,15 +247,19 @@ const OrderDetails = () => {
                 <div className="grid gap-4">
                   <div className="flex gap-3 text-sm">
                     <p className="font-primarySemibold">Full Name:</p>
-                    <p>{orderDetails.name}</p>
+                    <p>
+                      {orderDetails.userId.firstName +
+                        " " +
+                        orderDetails.userId.lastName}
+                    </p>
                   </div>
                   <div className="flex gap-3 text-sm">
                     <p className="font-primarySemibold">Email:</p>
-                    <p>mathewjones@gmail.com</p>
+                    <p>{orderDetails.userId.email}</p>
                   </div>
                   <div className="flex flex-row gap-[10px] w-full">
                     <p className="text-sm font-semibold">Phone:</p>
-                    <p className="text-sm">234-812-411-777-01</p>
+                    <p className="text-sm">{orderDetails.userId.phoneNumber}</p>
                   </div>
                 </div>
               </div>
@@ -282,10 +327,15 @@ const OrderDetails = () => {
             <div className="w-full flex items-center flex-wrap p-4 gap-4">
               {orderDetails.products.map((product) => (
                 <>
-                  <div className="w-[175px] border border-[#CFCBCB] h-[120px] rounded-lg"></div>
+                  <div className="w-[175px] border border-[#CFCBCB] h-[120px] rounded-lg">
+                    <img
+                      src={product.productId.featured_image}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="flex items-center gap-10">
                     <div className="flex flex-col items-center">
-                      <b className="text-sm">Apples</b>
+                      <b className="text-sm">{product.productId.name}</b>
                       <p className="text-xs">Grocery</p>
                     </div>
                     <div className="flex flex-col items-center">
@@ -294,7 +344,12 @@ const OrderDetails = () => {
                     </div>
                     <div className="flex flex-col items-center">
                       <b className="text-sm">Total Price</b>
-                      <p className="text-xs">$230</p>
+                      <p className="text-xs">
+                        {product.productId.currency +
+                          " " +
+                          product.productId.price *
+                            product.quantity.toLocaleString()}
+                      </p>
                     </div>
                   </div>
                 </>
@@ -305,17 +360,15 @@ const OrderDetails = () => {
             {showActionButtons() && (
               <div className="w-full md:max-w-[300px] md:gap-5 flex flex-row justify-between items-center">
                 <button
-                  // onClick={() => {
-                  //   toast("Order Accepted", {
-                  //     position: "top-center",
-                  //   });
-                  //   setacceptOrder(true);
-                  // }}
+                  onClick={handleApprove}
                   className="h-[46px] w-[150px] rounded-md bg-[#359E52] text-white"
                 >
                   Accept Order
                 </button>
-                <button className="h-[46px] w-[150px] rounded-md bg-none text-red-500 border border-red-500">
+                <button
+                  onClick={handleDecline}
+                  className="h-[46px] w-[150px] rounded-md bg-none text-red-500 border border-red-500"
+                >
                   Cancel order
                 </button>
               </div>

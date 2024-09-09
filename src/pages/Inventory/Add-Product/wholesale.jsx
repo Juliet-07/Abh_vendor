@@ -34,6 +34,7 @@ const AddWholesaleProduct = () => {
     unitPerCaton: "",
     maximumOrderPerCarton: "",
     size: "",
+    weight: "",
     unit: "",
     description: "",
     price: "",
@@ -50,6 +51,7 @@ const AddWholesaleProduct = () => {
     unitPerCaton,
     maximumOrderPerCarton,
     size,
+    weight,
     unit,
     description,
     price,
@@ -174,6 +176,7 @@ const AddWholesaleProduct = () => {
     formData.append("name", name);
     formData.append("quantity", quantity);
     formData.append("size", finalSize);
+    formData.append("weight", weight);
     formData.append("unit", finalSize);
     formData.append("unitPerCaton", unitPerCaton);
     formData.append("categoryId", categoryId);
@@ -431,6 +434,17 @@ const AddWholesaleProduct = () => {
                   <option value="46">Size 46</option>
                 </select>
               )}
+            </div>
+            <div>
+              <label className="text-base">Weight</label>
+              <input
+                type="text"
+                className="w-full border border-[#CFCBCB] p-3 my-2"
+                placeholder="Input weight of product"
+                name="weight"
+                value={weight}
+                onChange={handleChange}
+              />
             </div>
             <div className="mb-4">
               <label className="text-base">Color</label>

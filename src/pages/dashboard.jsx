@@ -445,22 +445,22 @@ const Dashboard = () => {
           <div className="w-[350px] md:w-full min-h-[300px] overflow-x-scroll">
             <div className="flex flex-row items-center gap-4">
               <div className=" h-[56px] mt-[10px] p-[10px] flex flex-1 flex-row items-center md:justify-between bg-[#F1F4F2] border-[#C1C6C5]">
-                <b className="text-sm text-black  min-w-[150px] text-center">
+                <b className="flex-1 md:flex-none text-sm text-black  min-w-[150px] text-center">
                   Order ID
                 </b>
-                <b className="text-sm text-black  min-w-[150px] text-center">
+                <b className="flex-1 md:flex-none text-sm text-black  min-w-[150px]">
                   Date
                 </b>
-                <b className="text-sm text-black  min-w-[150px] text-center">
+                {/* <b className="text-sm text-black  min-w-[150px] text-center">
                   Customer name
-                </b>
-                <b className="text-sm text-black  min-w-[150px] text-center">
+                </b> */}
+                <b className="flex-1 md:flex-none text-sm text-black  min-w-[150px] text-center">
                   Address
                 </b>
-                <b className="text-sm text-black  min-w-[150px] text-center">
+                <b className="flex-1 md:flex-none text-sm text-black  min-w-[150px] text-center">
                   Order status
                 </b>
-                <b className="text-sm text-black  min-w-[150px] text-center">
+                <b className="flex-1 md:flex-none text-sm text-black  min-w-[150px] text-center">
                   Items
                 </b>
               </div>
@@ -470,27 +470,28 @@ const Dashboard = () => {
               return (
                 <div className="flex flex-row items-center gap-4">
                   <div className="h-[56px] px-[10px] flex flex-1 flex-row items-center justify-between border-[#C1C6C5] border-[0.66px] mt-[10px]">
-                    <p className="text-sm text-black min-w-[150px] text-center">
+                    <p className="flex-1 md:flex-none text-xs text-black min-w-[150px] text-center">
                       {extractFiveDigits(data._id)}
                     </p>
-                    <p className="text-xs text-black min-w-[150px] text-center">
+                    <p className="flex-1 md:flex-none text-xs text-black min-w-[150px]">
                       {formatDate(data.created_at)}
                     </p>
-                    <p className="text-xs text-black min-w-[150px] text-center">
-                      {data.userId.firstName + " " + data.userId.lastName}
-                    </p>
-                    <p className="text-xs text-black min-w-[150px] text-center">
+                    {/* <p className="text-xs text-black min-w-[150px] text-center">
+                     
+                      {data?.userId?.firstName + " " + data?.userId?.lastName}
+                    </p> */}
+                    <p className="flex-1 md:flex-none text-xs text-black min-w-[150px] text-center">
                       {data.shippingAddress.street +
                         " " +
                         data.shippingAddress.city +
                         " " +
                         data.shippingAddress.state}
                     </p>
-                    <div className="text-sm text-black min-w-[150px] flex flex-row justify-center items-center gap-[10px]">
+                    <div className="flex-1 md:flex-none text-sm text-black min-w-[150px] flex flex-row justify-center items-center gap-[10px]">
                       <div className="w-[8px] h-[8px] bg-[#E3140F] rounded-[100px]" />
                       <p className="text-xs">{data.order_status} Pending</p>
                     </div>
-                    <p className="text-xs text-black min-w-[150px] text-center">
+                    <p className="flex-1 md:flex-none text-xs text-black min-w-[150px] text-center">
                       {data.products.length}
                     </p>
                   </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,6 +15,10 @@ const AllOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const [allOrders, setAllOrders] = useState([]);
+
+  const formatDate = (dateString) => {
+    return moment(dateString).format("MMMM DD, YYYY");
+  };
 
   const orders = [
     {
@@ -475,9 +480,13 @@ const AllOrders = () => {
                             {extractFiveDigits(order._id)}
                           </td>
                           <td className="p-4 text-center">
-                            {order.created_at}
+                            {formatDate(order.created_at)}
                           </td>
-                          <td className="p-4 text-center">{order.name}</td>
+                          <td className="p-4 text-center">
+                            {order?.userId?.firstName +
+                              " " +
+                              order?.userId?.lastName}
+                          </td>
                           <td className="p-4 text-center">
                             {order.shippingAddress.street +
                               " " +
