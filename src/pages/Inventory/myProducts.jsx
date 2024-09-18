@@ -284,6 +284,12 @@ const Myproducts = () => {
                     {/* <br /> */}
                     <p>{selectedProduct.description}</p>
                     <br />
+                    <br />
+                    <div className="flex flex-row gap-[10px]">
+                      <b>Product Type</b>
+                      <p>{selectedProduct.productType}</p>
+                    </div>
+                    <br />
                     <div className="flex flex-row gap-[10px]">
                       <b>Price</b>
                       <p>
@@ -294,7 +300,10 @@ const Myproducts = () => {
                     <div className="flex flex-row gap-[10px]">
                       <b>Quantity</b>
                       <p>
-                        {selectedProduct.quantity + " " + selectedProduct.unit}
+                        {selectedProduct.quantity -
+                          selectedProduct.soldQuantity +
+                          " " +
+                          selectedProduct.unit}
                       </p>
                     </div>
                     <br />
@@ -521,28 +530,30 @@ const Myproducts = () => {
                       </td>
                       <td className="p-3 text-center">
                         <div className="flex items-center justify-center">
-                          {data.quantity >= 20 && (
+                          {data.quantity - data.soldQuantity >= 20 && (
                             <div className="w-[66px] h-[35px] bg-[#E38E0F14] p-[10px] flex items-center justify-center gap-[10px]">
                               <div className="min-w-[8px] h-[8px] bg-[#E38E0F] rounded-full" />
                               <p className="text-[#E38E0F] text-[12px]">High</p>
                             </div>
                           )}
-                          {data.quantity >= 1 && data.quantity < 10 && (
-                            <div className="w-[101px] h-[35px] bg-[#E3140F1F] p-[10px] flex items-center justify-center gap-[10px]">
-                              <div className="min-w-[8px] h-[8px] bg-red-500 rounded-full" />
-                              <p className="text-red-500 text-[12px]">
-                                Low Stock
-                              </p>
-                            </div>
-                          )}
-                          {data.quantity >= 10 && data.quantity < 20 && (
-                            <div className="w-[91px] h-[35px] bg-[#081E9314] p-[10px] flex items-center justify-center gap-[10px]">
-                              <div className="min-w-[8px] h-[8px] bg-[#081E93] rounded-full" />
-                              <p className="text-[#081E93] text-[12px]">
-                                Medium
-                              </p>
-                            </div>
-                          )}
+                          {data.quantity - data.soldQuantity >= 1 &&
+                            data.quantity - data.soldQuantity < 10 && (
+                              <div className="w-[101px] h-[35px] bg-[#E3140F1F] p-[10px] flex items-center justify-center gap-[10px]">
+                                <div className="min-w-[8px] h-[8px] bg-red-500 rounded-full" />
+                                <p className="text-red-500 text-[12px]">
+                                  Low Stock
+                                </p>
+                              </div>
+                            )}
+                          {data.quantity - data.soldQuantity >= 10 &&
+                            data.quantity - data.soldQuantity < 20 && (
+                              <div className="w-[91px] h-[35px] bg-[#081E9314] p-[10px] flex items-center justify-center gap-[10px]">
+                                <div className="min-w-[8px] h-[8px] bg-[#081E93] rounded-full" />
+                                <p className="text-[#081E93] text-[12px]">
+                                  Medium
+                                </p>
+                              </div>
+                            )}
                         </div>
                       </td>
                       <td className="p-4 text-center">

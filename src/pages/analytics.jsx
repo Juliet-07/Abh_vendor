@@ -13,8 +13,8 @@ const Analytics = () => {
   const token = localStorage.getItem("vendorToken");
   const [orders, setOrders] = useState([]);
   const [myProducts, setMyProducts] = useState([]);
+  const [totalSales, setTotalSales] = useState(null);
 
-  
   useEffect(() => {
     const getAllProducts = () => {
       axios
@@ -35,23 +35,39 @@ const Analytics = () => {
 
     const getAllOrders = () => {
       axios
-        .get(`${apiURL}/orders/vendor/me`, {
+        .get(`${apiURL}/vendors-dashboard/my-orders`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-type": "application/json; charset=UTF-8",
           },
         })
         .then((response) => {
-          // console.log(response.data.data.data);
-          setOrders(response.data.data.data);
+          // console.log(response.data.data.orders);
+          setOrders(response.data.data.orders);
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
         });
     };
-
+    const getTotalSales = () => {
+      axios
+        .get(`${apiURL}/vendors-dashboard/total-sales`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          const formattedTotalSales = response.data.data.toLocaleString();
+          setTotalSales(formattedTotalSales);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+    getTotalSales();
     getAllOrders();
-
     getAllProducts();
   }, []);
   return (
@@ -69,7 +85,7 @@ const Analytics = () => {
             <div className=" w-full flex flex-row items-center justify-center">
               <div className=" w-[80%] flex flex-row items-center justify-between">
                 <div className="flex flex-row  gap-[10px]">
-                  <b className="text-[18px]">$23100</b>
+                  <b className="text-[18px]">₦ {totalSales}</b>
                 </div>
 
                 <button className="w-[73px] h-[31px] bg-none text-[#0F9E36] border-none outline-none flex flex-row items-center justify-center gap-[9px] rounded-[8px] p-[0px]">

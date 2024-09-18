@@ -13,10 +13,11 @@ const OrderDetails = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const token = localStorage.getItem("vendorToken");
   const location = useLocation();
+  const navigate = useNavigate();
   const orderDetails = location.state && location.state.data;
   console.log("detailing", orderDetails);
-  const navigate = useNavigate();
   const [changeStatusPreview, setChangeStatusPreview] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!orderDetails) {
     return <div>No details available</div>;
@@ -29,7 +30,7 @@ const OrderDetails = () => {
           return "bg-[#E3140F]"; // Red
         case "processing":
           return "bg-[#081E93]"; // Blue
-        case "ready to ship":
+        case "ready_to_ship":
           return "bg-[#FFA500]"; // Orange
         case "shipped":
           return "bg-[#08932E]"; // Green
@@ -74,7 +75,7 @@ const OrderDetails = () => {
 
   const showChangeStatusButton = () => {
     const status = orderDetails.deliveryStatus.toLowerCase();
-    return status === "processing" || status === "ready to ship";
+    return status === "processing" || status === "ready_to_ship";
   };
 
   const showActionButtons = () => {
@@ -87,7 +88,8 @@ const OrderDetails = () => {
   };
 
   const manageOrderStatus = (orderId, status) => {
-    const url = `${apiURL}/orders/status/${orderId}`;
+    setLoading(true);
+    const url = `${apiURL}/vendors-dashboard/accept-orders/${orderId}`;
     axios
       .put(
         url,
@@ -101,18 +103,41 @@ const OrderDetails = () => {
       )
       .then((response) => {
         console.log("Order status updated:", response.data);
-        toast.success("Order successfully accepted");
+        if (response.data.success === true) {
+          toast.success("Order successfully accepted");
+        }
       })
       .catch((error) => {
         console.error("Error updating order status:", error);
         toast.error("Error updating order status");
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleApprove = () => {
-    manageOrderStatus(orderDetails._id, "CONFIRMED");
+    manageOrderStatus(orderDetails._id, "PROCESSING");
     // setPreview(false);
     // setApproval(true);
+  };
+
+  const handleReadyToShip = () => {
+    manageOrderStatus(orderDetails._id, "READY");
+    setChangeStatusPreview(false);
+  };
+
+  const handleShipped = () => {
+    manageOrderStatus(orderDetails._id, "SHIPPED");
+    setChangeStatusPreview(false);
+  };
+
+  const handleDelivered = () => {
+    manageOrderStatus(orderDetails._id, "DELIVERED");
+    setChangeStatusPreview(false);
+  };
+
+  const handleReturned = () => {
+    manageOrderStatus(orderDetails._id, "RETURNED");
+    setChangeStatusPreview(false);
   };
 
   const handleDecline = () => {
@@ -140,27 +165,36 @@ const OrderDetails = () => {
               Change Status
             </div>
             <div className="grid grid-cols-2 gap-6 my-6">
-              <button className="p-2 border rounded flex items-center justify-center">
+              <button
+                onClick={handleReadyToShip}
+                className="p-2 border rounded flex items-center justify-center"
+              >
                 <div className="w-2 h-2 bg-orange-500 rounded-full mr-2" />
                 Ready to ship
               </button>
-              <button className="p-2 border rounded flex items-center justify-center">
+              <button
+                onClick={handleShipped}
+                className="p-2 border rounded flex items-center justify-center"
+              >
                 <div className="w-2 h-2 bg-purple-500 rounded-full mr-2" />
                 Shipped
               </button>
-              <button className="p-2 border rounded flex items-center justify-center">
+              <button
+                onClick={handleDelivered}
+                className="p-2 border rounded flex items-center justify-center"
+              >
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2" />
                 Delivered
               </button>
-              <button className="p-2 border rounded flex items-center justify-center">
+              <button
+                onClick={handleReturned}
+                className="p-2 border rounded flex items-center justify-center"
+              >
                 <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2" />
                 Returned
               </button>
             </div>
             <div className="flex items-center gap-6 font-primarySemibold">
-              <button className="h-[46px] w-[186px] rounded-md bg-[#359E52] text-white">
-                Update
-              </button>
               <button
                 onClick={() => setChangeStatusPreview(false)}
                 className="h-[46px] w-[186px] rounded-md bg-white text-black border border-[#CFCBCB]"
@@ -171,6 +205,7 @@ const OrderDetails = () => {
           </div>
         </div>
       )}
+
       <header className="w-full h-[70px] bg-white flex flex-row items-center justify-between p-4 font-primaryRegular">
         <div className="flex flex-row gap-6 cursor-pointer">
           <ArrowLeftIcon
@@ -218,10 +253,10 @@ const OrderDetails = () => {
                 </p>
                 <p>{orderDetails.date}</p>
               </div>
-              {/* <div className="flex flex-col items-center justify-center text-xs md:text-base">
+              <div className="flex flex-col items-center justify-center text-xs md:text-base">
                 <p>Total price</p>
                 <p className="font-primarySemibold">{orderDetails.price}</p>
-              </div> */}
+              </div>
               <div className="flex flex-col items-center justify-center">
                 <p className="text-sm md:text-base">Order Status</p>
                 <div className="flex gap-4 items-center justify-center">
@@ -324,9 +359,9 @@ const OrderDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex items-center flex-wrap p-4 gap-4">
+            <div className="w-full grid p-4 gap-10">
               {orderDetails.products.map((product) => (
-                <>
+                <div className="flex flex-wrap gap-4">
                   <div className="w-[175px] border border-[#CFCBCB] h-[120px] rounded-lg">
                     <img
                       src={product.productId.featured_image}
@@ -352,7 +387,7 @@ const OrderDetails = () => {
                       </p>
                     </div>
                   </div>
-                </>
+                </div>
               ))}
             </div>
           </div>
@@ -363,7 +398,7 @@ const OrderDetails = () => {
                   onClick={handleApprove}
                   className="h-[46px] w-[150px] rounded-md bg-[#359E52] text-white"
                 >
-                  Accept Order
+                  {loading ? "Processing..." : "Accept Order"}
                 </button>
                 <button
                   onClick={handleDecline}

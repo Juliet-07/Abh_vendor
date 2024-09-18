@@ -122,7 +122,7 @@ const OrderDetails = () => {
                 className={`p-2 border rounded flex items-center justify-center ${
                   selectedStatus === "Ready to ship" ? "bg-gray-200" : ""
                 }`}
-                onClick={() => handleStatusChange("Ready to ship")}
+                onClick={() => handleStatusChange("READY")}
               >
                 <div className="w-2 h-2 bg-orange-500 rounded-full mr-2" />
                 Ready to ship

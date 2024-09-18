@@ -36,17 +36,17 @@ const Navbar = ({ onToggleSidebar }) => {
   };
 
   return (
-    <nav className="hidden md:flex items-center justify-around h-[72px] px-6 p-2 shadow-md bg-[#359E52]">
+    <nav className="hidden md:flex items-center justify-between h-[72px] px-6 p-2 shadow-md bg-[#359E52]">
       {/* <div>Dashboard</div> */}
       <div></div>
-      <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] flex items-center rounded-[6px] ">
+      {/* <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] flex items-center rounded-[6px] ">
         <input
           type="text"
           className="w-full  bg-none border-none outline-none  placeholder:text-[12px] placeholder:text-[#37343566]"
           placeholder="Search for products"
         />
         <FiSearch width={16} height={16} color="#37343566" />
-      </div>
+      </div> */}
       <div className="flex items-center px-4">
         <Link
           to="/dashboard/notifications"

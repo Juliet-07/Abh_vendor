@@ -20,189 +20,6 @@ const AllOrders = () => {
     return moment(dateString).format("MMMM DD, YYYY");
   };
 
-  const orders = [
-    {
-      id: "1565132",
-      name: "Michael Farasin",
-      date: "Jan 2, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Pending",
-    },
-    {
-      id: "1565132",
-      name: "Prince Farasin",
-      date: "Feb 3, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Tom Cat",
-      date: "Mar 2, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Pending",
-      price: "$230",
-      order_status: "Pending",
-    },
-    {
-      id: "1565132",
-      name: "Victor bryte",
-      date: "Aug 2, 2024",
-      address: "37, ktu, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Anony Mous",
-      date: "MAy 4, 2024",
-      address: "84, subway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Shipped",
-    },
-    {
-      id: "1565132",
-      name: "John Smith",
-      date: "Aug 2, 2024",
-      address: "7, subway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Pending",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Moses Micheal",
-      date: "Aug 2, 2024",
-      address: "7, yaba, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Ready To Ship",
-    },
-    {
-      id: "1565132",
-      name: "David King",
-      date: "Aug 2, 2024",
-      address: "22, Banksway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Shipped",
-    },
-    {
-      id: "1565132",
-      name: "Tim Codes",
-      date: "Aug 2, 2024",
-      address: "27, Timsway, Ontario, CA",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Michael Farasin",
-      date: "Jan 2, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Pending",
-    },
-    {
-      id: "1565132",
-      name: "Prince Farasin",
-      date: "Feb 3, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Tom Cat",
-      date: "Mar 2, 2024",
-      address: "7, Kingsway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Pending",
-      price: "$230",
-      order_status: "Pending",
-    },
-    {
-      id: "1565132",
-      name: "Victor bryte",
-      date: "Aug 2, 2024",
-      address: "37, ktu, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Processing",
-    },
-    {
-      id: "1565132",
-      name: "Anony Mous",
-      date: "MAy 4, 2024",
-      address: "84, subway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Shipped",
-    },
-    {
-      id: "1565132",
-      name: "John Smith",
-      date: "Aug 2, 2024",
-      address: "7, subway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Returned",
-    },
-    {
-      id: "1565132",
-      name: "Moses Micheal",
-      date: "Aug 2, 2024",
-      address: "7, yaba, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Ready To Ship",
-    },
-    {
-      id: "1565132",
-      name: "David King",
-      date: "Aug 2, 2024",
-      address: "22, Banksway, Otawa, NY",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Delivered",
-    },
-    {
-      id: "1565132",
-      name: "Tim Codes",
-      date: "Aug 2, 2024",
-      address: "27, Timsway, Ontario, CA",
-      // order_status: "N/A",
-      payment_status: "Paid",
-      price: "$230",
-      order_status: "Delivered",
-    },
-  ];
-
   useEffect(() => {
     const getAllOrders = () => {
       axios
@@ -264,61 +81,6 @@ const AllOrders = () => {
     navigate("/dashboard/orderDetails", { state: { data } });
   };
 
-  // const getOrderStatusStyles = (status) => {
-  //   switch (status.toLowerCase()) {
-  //     case "pending":
-  //       return {
-  //         dotsColor: "bg-[#E3140F]",
-  //       };
-  //     case "shipped":
-  //       return {
-  //         dotsColor: "bg-[#9747FF]",
-  //       };
-  //     case "ready to ship":
-  //       return {
-  //         dotsColor: "bg-[#FFA500]",
-  //       };
-  //     case "processing":
-  //       return {
-  //         dotsColor: "bg-[#081E93]",
-  //       };
-  //     case "delivered":
-  //       return {
-  //         dotsColor: "bg-[#08932E]",
-  //       };
-  //     case "returned":
-  //       return {
-  //         dotsColor: "bg-[#DFE30F]",
-  //       };
-  //     default:
-  //       return {
-  //         dotsColor: "bg-gray-200",
-  //       };
-  //   }
-  // };
-
-  // const getPaymentStatusStyles = (status) => {
-  //   switch (status.toLowerCase()) {
-  //     case "paid":
-  //       return {
-  //         bgColor: "bg-[#08932E]/[12%]",
-  //         textColor: "text-[#08932E]",
-  //         dotColor: "bg-[#08932E]",
-  //       };
-  //     case "pending":
-  //       return {
-  //         bgColor: "bg-[#E3140F]/[12%]",
-  //         textColor: "text-[#E3140F]",
-  //         dotColor: "bg-[#E3140F]",
-  //       };
-  //     default:
-  //       return {
-  //         bgColor: "bg-gray-200",
-  //         textColor: "text-gray-800",
-  //       };
-  //   }
-  // };
-
   const getOrderStatusStyles = (status) => {
     // Check if status is defined and is a string
     if (typeof status === "string") {
@@ -327,7 +89,7 @@ const AllOrders = () => {
           return { dotsColor: "bg-[#E3140F]" };
         case "shipped":
           return { dotsColor: "bg-[#9747FF]" };
-        case "ready to ship":
+        case "ready":
           return { dotsColor: "bg-[#FFA500]" };
         case "processing":
           return { dotsColor: "bg-[#081E93]" };
@@ -373,10 +135,11 @@ const AllOrders = () => {
     "All",
     "Pending",
     "Processing",
-    "Ready To Ship",
+    "Ready",
     "Shipped",
     "Delivered",
     "Returned",
+    "Declined",
   ];
 
   const handlePageChange = (pageNumber) => {
@@ -517,7 +280,7 @@ const AllOrders = () => {
                             </div>
                           </td>
                           <td className="p-4 text-center">
-                            {order?.products.length}
+                            {order?.products?.length}
                           </td>
                           <td className="p-4 text-center">
                             <button
