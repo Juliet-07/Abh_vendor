@@ -318,20 +318,21 @@ const Dashboard = () => {
           <div className="md:w-[50%] w-full h-[411px] flex flex-col bg-white rounded-xl p-4">
             <Dropdown
               title={"ORDER STATUS"}
-              data={[
-                "JAN",
-                "FEB",
-                "MAR",
-                "APR",
-                "MAY",
-                "JUN",
-                "JUL",
-                "AUG",
-                "SEP",
-                "OCT",
-                "NOV",
-                "DEC",
-              ]}
+              data={[]}
+              // data={[
+              //   "JAN",
+              //   "FEB",
+              //   "MAR",
+              //   "APR",
+              //   "MAY",
+              //   "JUN",
+              //   "JUL",
+              //   "AUG",
+              //   "SEP",
+              //   "OCT",
+              //   "NOV",
+              //   "DEC",
+              // ]}
               onChange={(wp) => console.log(wp)}
             />
             <OrderStatusChart />

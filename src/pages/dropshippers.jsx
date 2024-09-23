@@ -321,7 +321,7 @@ const OrderProgress = () => {
   useEffect(() => {
     const getAllOrders = () => {
       axios
-        .get(`${apiURL}/vendors-dashboard/shippings`, {
+        .get(`${apiURL}/vendors-dashboard/my-dropshipping`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-type": "application/json; charset=UTF-8",
