@@ -464,12 +464,12 @@ const Myproducts = () => {
           </div>
 
           <div className="flex flex-row items-center gap-3 font-primaryRegular">
-            <button
+            {/* <button
               onClick={() => navigate("/dashboard/bulkUpload")}
               className="h-[36px] w-[143px] rounded-md bg-[#F58634] text-sm text-white"
             >
               Bulk upload
-            </button>
+            </button> */}
             <button
               onClick={() => navigate("/dashboard/addProducts")}
               className="h-[36px] w-[122px] rounded-md bg-none text-sm text-[#359E52] border-[1px] border-[#359E52]"

@@ -400,7 +400,7 @@ const Dashboard = () => {
                     <p className="text-[16px] text-black  ">{data.product}</p>
                     <p className="text-sm text-[#373435] ">{data.type}</p>
                   </div>
-                  <p>$250</p>
+                  <p>₦ 250</p>
                 </div>
               );
             })}

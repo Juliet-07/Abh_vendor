@@ -163,13 +163,13 @@ const Analytics = () => {
         </div>
 
         {/* Table */}
-        <div className="w-[350px] md:w-full  min-h-[500px] bg-white rounded-[10px] p-4 mt-10">
+        {/* <div className="w-[350px] md:w-full  min-h-[500px] bg-white rounded-[10px] p-4 mt-10">
           <div className="w-full h-[56px] p-[10px] flex flex-row items-center justify-between border-[#C1C6C5] border-[0.66px]">
             <div className="w-[300px] flex flex-row justify-between items-center">
               <p className="text-[16px] font-[600]">TOP SELLING PRODUCTS</p>
             </div>
 
-            <div className="w-[80%] max-w-[500px] h-[40px] bg-white p-[10px] hidden md:flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">
+            <div className="w-[80%] max-w-[500px] h-10 bg-white p-[10px] hidden md:flex items-center rounded-[6px] border-[#CFCBCB] border-[0.66px] ">
               <input
                 type="text"
                 className="w-full  bg-none border-none h-[35px] outline-none  placeholder:text-[12px] placeholder:text-[#37343566]"
@@ -230,7 +230,8 @@ const Analytics = () => {
               );
             })}
           </div>
-        </div>
+        </div> */}
+
       </div>
     </>
   );

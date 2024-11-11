@@ -7,6 +7,7 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Apple from "../assets/apple.png";
 import { LuCheckCircle } from "react-icons/lu";
+import moment from "moment";
 
 const Dropshippers = () => {
   const [activeTab, setActiveTab] = useState("Products For Dropshipping");
@@ -92,6 +93,10 @@ const NewDropshipping = () => {
   const itemsPerPage = 6;
   const [dropshippingProducts, setAllDropshippingProducts] = useState([]);
 
+  const formatDate = (dateString) => {
+    return moment(dateString).format("MMMM DD, YYYY");
+  };
+
   useEffect(() => {
     const getAllOrders = () => {
       axios
@@ -103,7 +108,7 @@ const NewDropshipping = () => {
         })
         .then((response) => {
           console.log(response.data.data.dropshipping, "Dropshippers");
-          setAllDropshippingProducts(response.data.data.dropshipping);
+          setAllDropshippingProducts(response.data.data.dropshipping.reverse());
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
@@ -207,7 +212,9 @@ const NewDropshipping = () => {
                       key={index}
                       className="border text-xs font-primaryMedium mb-4"
                     >
-                      <td className="p-4 text-center">Jun 16, 2024</td>
+                      <td className="p-4 text-center">
+                        {formatDate(order.created_at)}
+                      </td>
                       <td className="p-4 text-center">{order.name}</td>
                       <td className="p-4 text-left">
                         <div className="flex gap-2">
@@ -293,13 +300,13 @@ const NewDropshipping = () => {
                   <p className="text-[#373435] font-primaryMedium">
                     No recent orders
                   </p>
-                  <img
+                  {/* <img
                     width={400}
                     height={400}
-                    src="/order-dashboard.png"
+                    src="/assets/cart.svg"
                     alt="No orders"
                     className="mt-4"
-                  />
+                  /> */}
                 </div>
               </td>
             </tr>
@@ -328,8 +335,11 @@ const OrderProgress = () => {
           },
         })
         .then((response) => {
-          console.log(response.data.data, "Orders for dropshipping");
-          setShippingProducts(response.data.data);
+          console.log(
+            response.data.data.dropshipping,
+            "Orders for dropshipping"
+          );
+          setShippingProducts(response.data.data.dropshipping);
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
@@ -519,13 +529,13 @@ const OrderProgress = () => {
                   <p className="text-[#373435] font-primaryMedium">
                     No recent orders
                   </p>
-                  <img
+                  {/* <img
                     width={400}
                     height={400}
-                    src="/order-dashboard.png"
+                    src="/assets/cart.svg"
                     alt="No orders"
                     className="mt-4"
-                  />
+                  /> */}
                 </div>
               </td>
             </tr>

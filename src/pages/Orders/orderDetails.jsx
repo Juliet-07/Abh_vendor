@@ -225,12 +225,12 @@ const OrderDetails = () => {
               Change status
             </button>
           )}
-          <div className="bg-[#8BCB901F] md:w-[197px] w-[40px] h-[40px] p-[10px] gap-[11px] flex flex-row items-center justify-center rounded-[6px]">
+          {/* <div className="bg-[#8BCB901F] md:w-[197px] w-[40px] h-[40px] p-[10px] gap-[11px] flex flex-row items-center justify-center rounded-[6px]">
             <DownloadIcon width={14} height={14} color="#359E52" />
             <p className="text-[16px] text-[#359E52] hidden md:flex">
               Download invoice
             </p>
-          </div>
+          </div> */}
         </div>
       </header>
       <div className="w-full mt-6 md:mt-10 flex flex-col">
@@ -253,10 +253,10 @@ const OrderDetails = () => {
                 </p>
                 <p>{orderDetails.date}</p>
               </div>
-              <div className="flex flex-col items-center justify-center text-xs md:text-base">
+              {/* <div className="flex flex-col items-center justify-center text-xs md:text-base">
                 <p>Total price</p>
                 <p className="font-primarySemibold">{orderDetails.price}</p>
-              </div>
+              </div> */}
               <div className="flex flex-col items-center justify-center">
                 <p className="text-sm md:text-base">Order Status</p>
                 <div className="flex gap-4 items-center justify-center">
@@ -332,7 +332,7 @@ const OrderDetails = () => {
                   </div>
                   <div className="flex gap-3 text-sm">
                     <p className="font-primarySemibold">Delivery:</p>
-                    <p>Deliver before tuesday 05/12/2023</p>
+                    <p>In 3 working days</p>
                   </div>
                 </div>
               </div>
@@ -382,8 +382,9 @@ const OrderDetails = () => {
                       <p className="text-xs">
                         {product.productId.currency +
                           " " +
-                          product.productId.price *
-                            product.quantity.toLocaleString()}
+                          (
+                            product.productId.price * product.quantity
+                          ).toLocaleString()}
                       </p>
                     </div>
                   </div>
