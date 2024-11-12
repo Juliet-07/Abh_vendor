@@ -84,7 +84,7 @@ const AddProduct = () => {
           >
             Retail Products
           </button>
-          <button
+          {/* <button
             className={` p-2 rounded-md ${
               activeTab === "sample"
                 ? "bg-[#F0F0F0] border-[#359E52] text-[#359E52]"
@@ -93,7 +93,7 @@ const AddProduct = () => {
             onClick={() => setActiveTab("sample")}
           >
             Sell Sample Products
-          </button>
+          </button> */}
         </div>
         {renderForm()}
       </div>
