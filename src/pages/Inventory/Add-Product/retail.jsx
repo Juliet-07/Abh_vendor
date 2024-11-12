@@ -251,7 +251,9 @@ const AddRetailProduct = () => {
                     style={{ display: "none" }}
                   />
                 </label>
-                <p className="max-w-[217px]">or drag and drop PNG, JPG</p>
+                <p className="max-w-[217px] text-xs text-center">
+                  Click the link above and select an image of PNG, JPG or JPEG
+                </p>
               </div>
               <br />
               <div className="w-full flex flex-row flex-wrap gap-5">
@@ -296,7 +298,9 @@ const AddRetailProduct = () => {
                     multiple
                   />
                 </label>
-                <p className="max-w-[217px]">or drag and drop PNG, JPG</p>
+                <p className="max-w-[217px] text-xs text-center">
+                  Click the link above and select an image of PNG, JPG or JPEG
+                </p>
               </div>
               <br />
               <div className="w-full flex flex-row flex-wrap gap-5">
