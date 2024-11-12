@@ -183,7 +183,7 @@ const AddWholesaleProduct = () => {
     formData.append("subCategoryId", subCategoryId);
     formData.append("description", description);
     formData.append("price", price);
-    formData.append("currency", "NGN");
+    formData.append("currency", "₦");
     formData.append("manufacturer", manufacturer);
     formData.append("maximumOrderPerCarton", maximumOrderPerCarton);
     galleryFiles.forEach((image) => {
