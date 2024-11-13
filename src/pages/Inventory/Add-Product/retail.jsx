@@ -160,7 +160,7 @@ const AddRetailProduct = () => {
     formData.append("subcategoryId", subCategoryId);
     formData.append("description", description);
     formData.append("price", price);
-    formData.append("currency", "₦");
+    formData.append("currency", "NGN");
     formData.append("color", color);
     formData.append("manufacturer", manufacturer);
     galleryFiles.forEach((image) => {
