@@ -500,7 +500,7 @@ const AddWholesaleProduct = () => {
               ></textarea>
             </div>
             <div>
-              <label className="text-base">Maximum Order per carton</label>
+              <label className="text-base">Minimum Order in carton</label>
               <input
                 type="text"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
