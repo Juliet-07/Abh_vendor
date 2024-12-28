@@ -26,7 +26,7 @@ const Myproducts = () => {
   const [FilteredProducts, setFilteredProducts] = useState([]);
   const [showQuantityPopup, setShowQuantityPopup] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 5;
   const [loading, setLoading] = useState(false);
 
   const CustomSlider = ({ settings, images }) => {
@@ -480,7 +480,7 @@ const Myproducts = () => {
         </div>
 
         {/* products Table */}
-        <div className="my-10 w-full bg-white p-3">
+        <div className="my-4 w-full bg-white p-3">
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white font-primaryRegular border border-[#C1C6C5]">
               <thead className="bg-[#F1F4F2] font-primaryBold text-sm">
@@ -509,15 +509,12 @@ const Myproducts = () => {
                           <img
                             src={`${data.featured_image}`}
                             alt=""
-                            width={50}
-                            height={50}
+                            width={100}
+                            height={100}
                             className="rounded-full"
                           />
-                          <div className="w-[100px] flex flex-col gap-2">
-                            {/* <p className="overflow-hidden text-ellipsis whitespace-nowrap">
-                              {data.name}
-                            </p> */}
-                            <p className="text-ellipsis whitespace-nowrap">
+                          <div className="w-[250px] flex flex-col gap-2">
+                            <p className="break-words overflow-hidden">
                               {data.name}
                             </p>
                             <b>{data?.categoryId?.name}</b>
@@ -526,7 +523,7 @@ const Myproducts = () => {
                       </td>
                       <td className="p-4 text-center">{data.productType}</td>
                       <td className="p-4 text-center">
-                        {data.currency + " " + data.price}
+                        {data.currency + " " + data.price.toLocaleString()}
                       </td>
                       <td className="p-3 text-center">
                         <div className="flex items-center justify-center">
@@ -601,19 +598,63 @@ const Myproducts = () => {
               </tbody>
             </table>
             <div className="flex justify-end mt-4 mb-2 font-primaryMedium">
-              {Array.from({ length: totalPages }, (_, index) => (
-                <button
-                  key={index + 1}
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`w-8 rounded mx-1 p-2 ${
-                    currentPage === index + 1
-                      ? "bg-[#359E52] text-white"
-                      : "bg-gray-200 text-black"
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, index) => {
+                const isHidden =
+                  index + 1 < currentPage - 2 || index + 1 > currentPage + 2;
+
+                return (
+                  <React.Fragment key={index + 1}>
+                    {/* Show first page and ellipsis */}
+                    {index + 1 === 1 && index + 1 < currentPage - 2 && (
+                      <>
+                        <button
+                          onClick={() => handlePageChange(1)}
+                          className={`w-8 rounded mx-1 p-2 ${
+                            currentPage === 1
+                              ? "bg-[#359E52] text-white"
+                              : "bg-gray-200 text-black"
+                          }`}
+                        >
+                          1
+                        </button>
+                        <span className="mx-2">...</span>
+                      </>
+                    )}
+
+                    {/* Main pagination logic */}
+                    {!isHidden && (
+                      <button
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`w-8 rounded mx-1 p-2 ${
+                          currentPage === index + 1
+                            ? "bg-[#359E52] text-white"
+                            : "bg-gray-200 text-black"
+                        }`}
+                      >
+                        {index + 1}
+                      </button>
+                    )}
+
+                    {/* Show last page and ellipsis */}
+                    {index + 1 === totalPages &&
+                      index + 1 > currentPage + 2 && (
+                        <>
+                          <span className="mx-2">...</span>
+                          <button
+                            onClick={() => handlePageChange(totalPages)}
+                            className={`w-8 rounded mx-1 p-2 ${
+                              currentPage === totalPages
+                                ? "bg-[#359E52] text-white"
+                                : "bg-gray-200 text-black"
+                            }`}
+                          >
+                            {totalPages}
+                          </button>
+                        </>
+                      )}
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </div>

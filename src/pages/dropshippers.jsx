@@ -284,7 +284,7 @@ const NewDropshipping = () => {
       ) : (
         <table className="w-full">
           <thead className="bg-[#F1F4F2]">
-            <tr className="text-[#000000] text-sm">
+            <tr className="text-[#000000] text-sm font-primaryBold">
               <th className="p-4">Order ID</th>
               <th className="p-4">Date</th>
               <th className="p-4">Product</th>

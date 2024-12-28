@@ -315,7 +315,7 @@ const Dashboard = () => {
         </div>
         {/* Top Products Sold */}
         <div className="w-full flex flex-row flex-wrap justify-between mt-10">
-          <div className="md:w-[50%] w-full h-[411px] flex flex-col bg-white rounded-xl p-4">
+          <div className=" w-full h-[411px] flex flex-col bg-white rounded-xl p-4">
             <Dropdown
               title={"ORDER STATUS"}
               data={[]}
@@ -338,7 +338,7 @@ const Dashboard = () => {
             <OrderStatusChart />
           </div>
 
-          <div className="md:w-[42.5%] w-full  h-[411px] overflow-y-scroll bg-white rounded-xl p-4 mt-10 gap-10 md:mt-0 no-scrollbar">
+          {/* <div className="md:w-[42.5%] w-full  h-[411px] overflow-y-scroll bg-white rounded-xl p-4 mt-10 gap-10 md:mt-0 no-scrollbar">
             <Dropdown
               title={"TOP PRODUCTS SOLD"}
               data={[
@@ -404,7 +404,7 @@ const Dashboard = () => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
         {/* Table */}
         <div className="w-full  min-h-[500px] bg-white rounded-md p-4 mt-10">
