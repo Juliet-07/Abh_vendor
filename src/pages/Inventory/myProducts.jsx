@@ -20,10 +20,10 @@ const Myproducts = () => {
   const token = localStorage.getItem("vendorToken");
   const [productsData, setProductsData] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [filterKeyword, setfilterKeyword] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [showPreview, setPreview] = useState(false);
   const [showDelete, setDelete] = useState(false);
-  const [FilteredProducts, setFilteredProducts] = useState([]);
   const [showQuantityPopup, setShowQuantityPopup] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -40,18 +40,6 @@ const Myproducts = () => {
           ))}
         </Slider>
       </div>
-    );
-  };
-
-  const searchForProducts = (keyword) => {
-    setFilteredProducts(
-      productsData.filter((product, index) => {
-        return (
-          product.name.toLowerCase().includes(keyword.toLowerCase()) ||
-          product.type.toLowerCase().includes(keyword.toLowerCase()) ||
-          product.status.toLowerCase().includes(keyword.toLowerCase())
-        );
-      })
     );
   };
 
@@ -108,6 +96,7 @@ const Myproducts = () => {
     const url = `${apiURL}/products/update/${selectedProduct._id}`;
     const payload = {
       quantity: selectedProduct.quantity,
+      price: selectedProduct.price,
     };
     axios
       .patch(url, payload, {
@@ -163,9 +152,9 @@ const Myproducts = () => {
     setCurrentPage(pageNumber);
   };
 
-  const totalPages = Math.ceil(productsData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
-  const paginatedTable = productsData.slice(
+  const paginatedTable = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -182,6 +171,7 @@ const Myproducts = () => {
         .then((response) => {
           console.log(response);
           setProductsData(response.data.data.products);
+          setFilteredProducts(response.data.data.products);
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
@@ -189,7 +179,24 @@ const Myproducts = () => {
     };
 
     getAllProducts();
+    // setFilteredProducts(productsData);
   }, []);
+
+  const handleSearch = (event) => {
+    // const filtered=productsData.filter((product)=>product.name.toLowerCase().includes(keyword.toLowerCase()))
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    if (query === "") {
+      setFilteredProducts(productsData);
+    } else {
+      const filtered = productsData.filter((product) =>
+        product.name.toLowerCase().includes(query)
+      );
+      setFilteredProducts(filtered);
+    }
+  };
+
   return (
     <>
       <ToastContainer />
@@ -405,6 +412,20 @@ const Myproducts = () => {
                     }
                   />
                 </div>
+                <div>
+                  <label className="font-primaryRegular text-sm">Price</label>
+                  <input
+                    type="number"
+                    className="w-full h-[46px] p-2 border rounded mt-2"
+                    value={selectedProduct.price}
+                    onChange={(e) =>
+                      setSelectedProduct({
+                        ...selectedProduct,
+                        price: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
             </div>
 
@@ -453,12 +474,10 @@ const Myproducts = () => {
           <div className="w-full md:w-[80%] max-w-[500px] h-10 bg-white p-3 flex items-center rounded-md">
             <input
               type="text"
-              className="w-full  bg-none border-none outline-none  placeholder:text-[12px] placeholder:text-[#37343566]"
+              className="w-full bg-none border-none outline-none  placeholder:text-xs placeholder:text-[#37343566] font-primaryMedium"
+              value={searchQuery}
               placeholder="Search for products"
-              onInput={(e) => {
-                setfilterKeyword(e.target.value);
-                searchForProducts(e.target.value);
-              }}
+              onChange={handleSearch}
             />
             <FiSearch width={16} height={16} color="#37343566" />
           </div>
