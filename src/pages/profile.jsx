@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserIcon, XIcon } from "@heroicons/react/outline";
 import { ArrowNarrowLeftIcon } from "@heroicons/react/solid";
 import { toast, ToastContainer } from "react-toastify";
 import { FaPenAlt } from "react-icons/fa";
+import DropdownComponent from "../components/StateSelection";
 
 const Profile = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -15,39 +16,102 @@ const Profile = () => {
   const [showAddAccountDetails, setShowAddAccountDetails] = useState(false);
   const [userData, setUserData] = useState({});
   const [initials, setInitials] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [town, setTown] = useState("");
+  const [townId, setTownId] = useState("");
 
   const initialAccountDetails = {
     accountName: "",
     accountNumber: "",
     bankName: "",
   };
+
+  const initialBusinessDetails = {
+    address: "",
+    phoneNumber: "",
+    alternatePhoneNumber: "",
+    email: "",
+    businessType: "",
+  };
+
   const [accountDetails, setAccountDetails] = useState(initialAccountDetails);
 
+  const [businessDetails, setBusinessDetails] = useState(
+    initialBusinessDetails
+  );
+
   const { accountName, accountNumber, bankName } = useState(accountDetails);
+
+  const { address, phoneNumber, alternatePhoneNumber, email, businessType } =
+    useState(businessDetails);
 
   const handleAccountInfoChange = (e) => {
     const { name, value } = e.target;
     setAccountDetails({ ...accountDetails, [name]: value });
   };
 
+  const handleBusinessInfoChange = (e) => {
+    const { name, value } = e.target;
+    setBusinessDetails({ ...businessDetails, [name]: value });
+  };
+
+  const handleStateInfo = useCallback((data) => {
+    console.log({ data });
+    setState(data.state);
+    setCity(data.cityName);
+    setTown(data.town);
+    setTownId(data.townId);
+    // console.log(city, "checking state");
+  }, []);
+
   const addAccountDetails = async () => {
     setLoading(true);
     const url = `${apiURL}/vendors/update-profile`;
     try {
-      const response = await axios.patch(
-        url,
-        { accountDetails },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await axios.patch(url, accountDetails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       console.log(response, "response");
       if (response.status === 200) {
         toast.success(response.data.data);
         setShowAddAccountDetails(false);
+      }
+    } catch (error) {
+      console.error("Error in API call:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const editBusinessInfo = async () => {
+    setLoading(true);
+    const url = `${apiURL}/vendors/update-profile`;
+    const payload = {
+      address: address,
+      phoneNumber: phoneNumber,
+      alternatePhoneNumber: alternatePhoneNumber,
+      email: email,
+      businessType: businessType,
+      state: state,
+      city: city,
+      town: town,
+      townId: townId.toString(),
+    };
+    try {
+      const response = await axios.patch(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      console.log(response, "response");
+      if (response.status === 200) {
+        toast.success(response.data.data);
+        setPreview(false);
       }
     } catch (error) {
       console.error("Error in API call:", error);
@@ -68,16 +132,16 @@ const Profile = () => {
         .then((response) => {
           console.log(response.data.data);
           setUserData(response.data.data);
-          let name = `${userData?.firstName || ""} ${
-            userData?.lastName || ""
-          }`.trim();
-          // console.log(name, "checkng name");
-          const _initials = name
-            .split(" ")
-            .map((word) => word[0]?.toUpperCase() || "")
-            .join("");
-          setInitials(_initials);
-          // console.log(_initials, "checking initials");
+          // let name = `${userData?.firstName || ""} ${
+          //   userData?.lastName || ""
+          // }`.trim();
+          // // console.log(name, "checkng name");
+          // const _initials = name
+          //   .split(" ")
+          //   .map((word) => word[0]?.toUpperCase() || "")
+          //   .join("");
+          // setInitials(_initials);
+          // // console.log(_initials, "checking initials");
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
@@ -104,7 +168,7 @@ const Profile = () => {
             />
             <div className="w-full flex flex-row flex-wrap min-h-1 gap-2 mt-4"></div>
 
-            <p className="text-[16px] w-full">Shop Residing Country</p>
+            {/* <p className="text-[16px] w-full">Shop Residing Country</p>
             <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
               <input
                 type="text"
@@ -113,20 +177,22 @@ const Profile = () => {
                 style={{ outline: "none" }}
                 className="flex w-full border-none"
               />
-            </div>
+            </div> */}
             <br />
             <p className="text-[16px] w-full">Shop Address</p>
             <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
               <input
                 type="text"
-                name=""
+                name="address"
+                value={address}
+                onChange={handleBusinessInfoChange}
                 id=""
                 style={{ outline: "none" }}
                 className="flex w-full border-none"
               />
             </div>
             <br />
-            <div className="md:flex md:flex-row w-full gap-4">
+            {/* <div className="md:flex md:flex-row w-full gap-4">
               <div className="flex flex-col w-full">
                 <p className="text-[16px] w-full">City</p>
                 <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
@@ -152,7 +218,8 @@ const Profile = () => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
+            <DropdownComponent onForm={handleStateInfo} />
             <br />
             <div className="md:flex flex-row w-full gap-4">
               <div className="flex flex-col w-full">
@@ -160,7 +227,9 @@ const Profile = () => {
                 <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
                   <input
                     type="text"
-                    name=""
+                    name="phoneNumber"
+                    value={phoneNumber}
+                    onChange={handleBusinessInfoChange}
                     id=""
                     style={{ outline: "none" }}
                     className="flex w-full border-none"
@@ -173,7 +242,9 @@ const Profile = () => {
                 <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
                   <input
                     type="text"
-                    name=""
+                    name="alternatePhoneNumber"
+                    value={alternatePhoneNumber}
+                    onChange={handleBusinessInfoChange}
                     id=""
                     style={{ outline: "none" }}
                     className="flex w-full border-none"
@@ -188,7 +259,9 @@ const Profile = () => {
                 <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
                   <input
                     type="text"
-                    name=""
+                    name="email"
+                    value={email}
+                    onChange={handleBusinessInfoChange}
                     id=""
                     style={{ outline: "none" }}
                     className="flex w-full border-none"
@@ -201,7 +274,9 @@ const Profile = () => {
                 <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
                   <input
                     type="text"
-                    name=""
+                    name="businessType"
+                    value={businessType}
+                    onChange={handleBusinessInfoChange}
                     id=""
                     style={{ outline: "none" }}
                     className="flex w-full border-none"
@@ -214,11 +289,7 @@ const Profile = () => {
             <div className="w-full flex items-center justify-between my-6">
               <div>
                 <button
-                  onClick={() => {
-                    // window.open("#edit", "_parent")
-                    setPreview(false);
-                    pushEdit("id");
-                  }}
+                  onClick={editBusinessInfo}
                   className="md:w-[186px] w-[99px]  h-[46px] bg-[#4CBD6B] text-white rounded-[6px]"
                 >
                   Edit
@@ -339,7 +410,9 @@ const Profile = () => {
             <div className="flex items-center gap-4 md:gap-10">
               <div className="bg-[#CFCBCB] rounded-full h-20 w-20 flex items-center justify-center font-primaryBold text-2xl">
                 {/* <UserIcon width={60} height={60} /> */}
-                {initials || "N/A"}
+                {/* {initials || "N/A"} */}
+                {userData?.firstName[0].toUpperCase() +
+                  userData?.lastName[0].toUpperCase()}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -382,10 +455,17 @@ const Profile = () => {
                 </div>
                 <div className="w-full h-[1px] bg-gray-600 mt-[10px]" />
                 <div className="flex flex-col mt-[10px] gap-[10px]">
-                  <p>No payment details</p>
-                  <p className="text-red-500 mt-4 text-xs">
-                    Add your payment account information
-                  </p>
+                  <div className="grid gap-4 text-sm">
+                    <div>
+                      <b>Account Number:</b> {userData?.accountNumber}
+                    </div>
+                    <div>
+                      <b>Account Name:</b> {userData?.accountName}
+                    </div>
+                    <div>
+                      <b>Bank Name:</b> {userData?.bankName}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -403,6 +483,13 @@ const Profile = () => {
               <br />
               <div className="flex flex-row w-full gap-4">
                 <div className="flex flex-col w-full">
+                  <p className="text-[16px] w-full">State</p>
+                  <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
+                    {userData?.state}
+                  </div>
+                </div>
+                <br />
+                <div className="flex flex-col w-full">
                   <p className="text-[16px] w-full">City</p>
                   <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
                     {userData?.city}
@@ -410,9 +497,9 @@ const Profile = () => {
                 </div>
                 <br />
                 <div className="flex flex-col w-full">
-                  <p className="text-[16px] w-full">State</p>
+                  <p className="text-[16px] w-full">Town</p>
                   <div className="w-full h-10 border mt-2 p-2 bg-white border-[#CFCBCB] flex flex-row justify-between">
-                    {userData?.state}
+                    {userData?.town}
                   </div>
                 </div>
               </div>

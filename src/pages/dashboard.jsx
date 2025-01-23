@@ -145,15 +145,15 @@ const Dashboard = () => {
   useEffect(() => {
     const getPendingOrders = () => {
       axios
-        .get(`${apiURL}/vendors-dashboard/orders?status=PENDING`, {
+        .get(`${apiURL}/vendors-dashboard/my-orders?filter.status=PENDING`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-type": "application/json; charset=UTF-8",
           },
         })
         .then((response) => {
-          console.log(response.data.data.data);
-          setRecentOrders(response.data.data.data);
+          console.log(response.data.data.orders, "data on dashboard");
+          setRecentOrders(response.data.data.orders);
         })
         .catch((error) => {
           console.error("Error fetching vendors:", error);
