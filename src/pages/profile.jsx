@@ -411,8 +411,8 @@ const Profile = () => {
               <div className="bg-[#CFCBCB] rounded-full h-20 w-20 flex items-center justify-center font-primaryBold text-2xl">
                 {/* <UserIcon width={60} height={60} /> */}
                 {/* {initials || "N/A"} */}
-                {userData?.firstName[0].toUpperCase() +
-                  userData?.lastName[0].toUpperCase()}
+                {userData?.firstName?.[0]?.toUpperCase() +
+                  userData?.lastName?.[0]?.toUpperCase()}
               </div>
 
               <div className="flex flex-col gap-2">

@@ -30,7 +30,7 @@ const OrderDetails = () => {
           return "bg-[#E3140F]"; // Red
         case "processing":
           return "bg-[#081E93]"; // Blue
-        case "ready_to_ship":
+        case "ready":
           return "bg-[#FFA500]"; // Orange
         case "shipped":
           return "bg-[#08932E]"; // Green
@@ -75,7 +75,7 @@ const OrderDetails = () => {
 
   const showChangeStatusButton = () => {
     const status = orderDetails.deliveryStatus.toLowerCase();
-    return status === "processing" || status === "ready_to_ship";
+    return status === "processing" || status === "ready";
   };
 
   const showActionButtons = () => {
@@ -87,11 +87,39 @@ const OrderDetails = () => {
     return id.substring(0, 5); // Extract the first 5 characters
   };
 
-  const manageOrderStatus = (orderId, status) => {
+  const acceptDeclineOrder = (orderId, status) => {
     setLoading(true);
     const url = `${apiURL}/vendors-dashboard/accept-orders/${orderId}`;
     axios
       .put(
+        url,
+        { deliveryStatus: status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Order status updated:", response.data);
+        if (response.data.success === true) {
+          toast.success("Order successfully accepted");
+          navigate("/dashboard/allOrders");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating order status:", error);
+        toast.error("Error updating order status");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const manageOrderStatus = (orderId, status) => {
+    setLoading(true);
+    const url = `${apiURL}/vendors-dashboard/update-orders-status/${orderId}`;
+    axios
+      .post(
         url,
         { deliveryStatus: status },
         {
@@ -115,36 +143,37 @@ const OrderDetails = () => {
   };
 
   const handleApprove = () => {
-    manageOrderStatus(orderDetails._id, "PROCESSING");
+    acceptDeclineOrder(orderDetails._id, "PROCESSING");
     // setPreview(false);
     // setApproval(true);
   };
 
+  const handleDecline = () => {
+    acceptDeclineOrder(orderDetails._id, "DECLINED");
+    // setPreview(false);
+    // setDecline(true);
+  };
+
   const handleReadyToShip = () => {
-    manageOrderStatus(orderDetails._id, "READY");
+    manageOrderStatus(orderDetails.orderId, "READY");
     setChangeStatusPreview(false);
   };
 
   const handleShipped = () => {
-    manageOrderStatus(orderDetails._id, "SHIPPED");
+    manageOrderStatus(orderDetails.orderId, "SHIPPED");
     setChangeStatusPreview(false);
   };
 
   const handleDelivered = () => {
-    manageOrderStatus(orderDetails._id, "DELIVERED");
+    manageOrderStatus(orderDetails.orderId, "DELIVERED");
     setChangeStatusPreview(false);
   };
 
   const handleReturned = () => {
-    manageOrderStatus(orderDetails._id, "RETURNED");
+    manageOrderStatus(orderDetails.orderId, "RETURNED");
     setChangeStatusPreview(false);
   };
 
-  const handleDecline = () => {
-    manageOrderStatus(orderDetails._id, "DECLINED");
-    // setPreview(false);
-    // setDecline(true);
-  };
   return (
     <>
       <ToastContainer />
