@@ -97,6 +97,7 @@ const Myproducts = () => {
     const payload = {
       quantity: selectedProduct.quantity,
       price: selectedProduct.price,
+      unitPerCarton: selectedProduct.unitPerCarton,
     };
     axios
       .patch(url, payload, {
@@ -422,6 +423,22 @@ const Myproducts = () => {
                       setSelectedProduct({
                         ...selectedProduct,
                         price: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="font-primaryRegular text-sm">
+                    Units Per Carton
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full h-[46px] p-2 border rounded mt-2"
+                    value={selectedProduct?.unitPerCarton}
+                    onChange={(e) =>
+                      setSelectedProduct({
+                        ...selectedProduct,
+                        unitPerCarton: e.target.value,
                       })
                     }
                   />

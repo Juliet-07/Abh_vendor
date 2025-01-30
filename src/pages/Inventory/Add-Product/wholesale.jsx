@@ -31,7 +31,7 @@ const AddWholesaleProduct = () => {
   const initialValue = {
     name: "",
     quantity: "",
-    unitPerCaton: "",
+    unitPerCarton: "",
     maximumOrderPerCarton: "",
     size: "",
     weight: "",
@@ -48,7 +48,7 @@ const AddWholesaleProduct = () => {
   const {
     name,
     quantity,
-    unitPerCaton,
+    unitPerCarton,
     maximumOrderPerCarton,
     size,
     weight,
@@ -178,7 +178,7 @@ const AddWholesaleProduct = () => {
     formData.append("size", finalSize);
     formData.append("weight", weight);
     formData.append("unit", finalSize);
-    formData.append("unitPerCaton", unitPerCaton);
+    formData.append("unitPerCarton", unitPerCarton);
     formData.append("categoryId", categoryId);
     formData.append("subCategoryId", subCategoryId);
     formData.append("description", description);
@@ -392,11 +392,11 @@ const AddWholesaleProduct = () => {
             <div>
               <label className="text-base">Units per carton</label>
               <input
-                type="text"
+                type="number"
                 className="w-full border border-[#CFCBCB] p-3 my-2"
                 placeholder="Number of item"
-                name="unitPerCaton"
-                value={unitPerCaton}
+                name="unitPerCarton"
+                value={unitPerCarton}
                 onChange={handleChange}
               />
             </div>
