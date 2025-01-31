@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiPhone, FiMail } from "react-icons/fi";
+import { useForm } from "react-hook-form";
+import emailjs from "@emailjs/browser";
 
 const Help = () => {
+  const { handleSubmit } = useForm();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleMessageSubmission = (e) => {
+    e.preventDefault();
+    emailjs.send("SERVICE_ID", "TEMPLATE_ID", formData, "PUBLIC_KEY").then(
+      (response) => {
+        console.log("SUCCESS!", response.status, response.text);
+        alert("Message Sent Successfully!");
+      },
+      (error) => {
+        console.error("FAILED...", error);
+        alert("Message Failed to Send.");
+      }
+    );
+  };
+
   return (
     <>
       <div className="w-full flex flex-col md:flex-row items-stretch justify-between gap-6 md:p-10">
@@ -19,7 +47,7 @@ const Help = () => {
             <div className="flex">
               <FiPhone size={20} />
               <p className="mx-4">Call us</p>
-              <p>123456789</p>
+              <p>07061131509</p>
             </div>
           </div>
         </div>
@@ -31,7 +59,7 @@ const Help = () => {
           {/* form proper */}
           <div className="">
             <form
-              // onSubmit={handleSubmit(submitHandler)}
+              onSubmit={handleSubmit(handleMessageSubmission)}
               className="w-full mx-auto flex flex-col justify-center p-3 md:p-6 font-primaryRegular"
             >
               <div className="flex flex-col">
@@ -47,6 +75,10 @@ const Help = () => {
                     id="name"
                     type="text"
                     placeholder="Enter your name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="mb-4">
@@ -61,6 +93,10 @@ const Help = () => {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                   />
                 </div>{" "}
                 <div className="mb-4">
@@ -75,6 +111,10 @@ const Help = () => {
                     id="phone"
                     type="number"
                     placeholder="Enter your phone number"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
                   />
                 </div>{" "}
                 <div className="mb-4">
@@ -89,11 +129,15 @@ const Help = () => {
                     id="message"
                     type="text"
                     placeholder="How can we help?"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="flex items-center justify-center">
                   <button
-                    type="button"
+                    type="submit"
                     className="w-full h-[50px] bg-[#4CBD6B] text-white font-bold rounded"
                   >
                     Send message
